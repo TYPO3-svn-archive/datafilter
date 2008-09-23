@@ -34,17 +34,6 @@ require_once(t3lib_extMgm::extPath('basecontroller', 'services/class.tx_basecont
  * @subpackage	tx_datafilter
  */
 class tx_datafilter extends tx_basecontroller_filterbase {
-	protected $piVars = array(); // piVars as passed by a FE plugin
-
-	/**
-	 * This method can be used to pass to the Data Filter the plug-in's variables
-	 *
-	 * @param	array	$piVars: array of plug-in variables
-	 * @return	void
-	 */
-	public function setPiVars($piVars) {
-		if (is_array($piVars)) $this->piVars = $piVars;
-	}
 
 // Data Filter interface methods
 
@@ -114,8 +103,8 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 					case 'page':
 						$value = $this->getValue($GLOBALS['TSFE']->page, $indices);
 						break;
-					case 'pivars':
-						$value = $this->getValue($this->piVars, $indices);
+					case 'vars':
+						$value = $this->getValue($this->vars, $indices);
 						break;
 				}
 			}
