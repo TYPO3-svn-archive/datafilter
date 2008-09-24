@@ -34,13 +34,25 @@ $TCA['tx_datafilter_filters'] = array (
 				'rows' => '6',
 			)
 		),
+		'logical_operator' => array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.logical_operator',		
+			'config' => array (
+				'type' => 'radio',
+				'default' => 'AND',
+				'items' => array (
+					array('LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.logical_operator.I.0', 'AND'),
+					array('LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.logical_operator.I.1', 'OR'),
+				),
+			)
+		),
 		'orderby' => array (		
 			'exclude' => 0,		
 			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.orderby',		
 			'config' => array (
 				'type' => 'text',
 				'cols' => '30',	
-				'rows' => '4',
+				'rows' => '3',
 			)
 		),
 		'limit_start' => array (		
@@ -67,15 +79,16 @@ $TCA['tx_datafilter_filters'] = array (
 			'config' => array (
 				'type' => 'text',
 				'cols' => '30',	
-				'rows' => '5',
+				'rows' => '4',
 			)
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'hidden;;;;1-1-1, title;;;;2-2-2, configuration;;;;3-3-3, orderby, limit_start;;1;;, additional_sql;;;;4-4-4')
+		'0' => array('showitem' => 'hidden;;;;1-1-1, title;;;;2-2-2, configuration;;1;;3-3-3, orderby, limit_start;;2;;, additional_sql;;;;4-4-4')
 	),
 	'palettes' => array (
-		'1' => array('showitem' => 'limit_offset')
+		'1' => array('showitem' => 'logical_operator'),
+		'2' => array('showitem' => 'limit_offset')
 	)
 );
 ?>

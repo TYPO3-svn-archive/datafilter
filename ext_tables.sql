@@ -11,6 +11,7 @@ CREATE TABLE tx_datafilter_filters (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	title varchar(255) DEFAULT '' NOT NULL,
 	configuration text,
+	logical_operator varchar(3) DEFAULT 'AND' NOT NULL,
 	orderby text,
 	limit_start varchar(255) DEFAULT '' NOT NULL,
 	limit_offset varchar(255) DEFAULT '' NOT NULL,

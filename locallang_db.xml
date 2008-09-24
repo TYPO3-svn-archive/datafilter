@@ -9,6 +9,9 @@
 			<label index="tx_datafilter_filters">Data Filters</label>
 			<label index="tx_datafilter_filters.title">Title</label>
 			<label index="tx_datafilter_filters.configuration">Filter Configuration</label>
+			<label index="tx_datafilter_filters.logical_operator">Logical operator</label>
+			<label index="tx_datafilter_filters.logical_operator.I.0">AND</label>
+			<label index="tx_datafilter_filters.logical_operator.I.1">OR</label>
 			<label index="tx_datafilter_filters.orderby">Order By Configuration</label>
 			<label index="tx_datafilter_filters.limit_start">Limit (start)</label>
 			<label index="tx_datafilter_filters.limit_offset">Limit (offset)</label>
