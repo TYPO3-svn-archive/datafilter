@@ -201,6 +201,9 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 					case 'page':
 						$value = $this->getValue($GLOBALS['TSFE']->page, $indices);
 						break;
+					case 'gp':
+						$value = $this->getValue(array_merge(t3lib_div::_GET(), t3lib_div::_POST()), $indices);
+						break;
 					case 'vars':
 						$value = $this->getValue($this->vars, $indices);
 						break;
