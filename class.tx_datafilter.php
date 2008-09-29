@@ -214,9 +214,10 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 	}
 
 	/**
-	 * This method is used to get a value from inside a multi-dimensional array
+	 * This method is used to get a value from inside a multi-dimensional array or object
+	 * NOTE: this code is largely inspired by tslib_content::getGlobal()
 	 *
-	 * @param	array	$source: array to look into
+	 * @param	mixed	$source: array or object to look into
 	 * @param	string	$indices: "path" of indinces inside the multi-dimensional array, of the form index1|index2|...
 	 * @return	mixed	Whatever value was found in the array
 	 */
@@ -228,7 +229,10 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 			$indexList = t3lib_div::trimExplode('|', $indices);
 			$value = $source;
 			foreach ($indexList as $key) {
-				if (isset($value[$key])) {
+				if (is_object($value) && isset($value->$key)) {
+					$value = $value->$key;
+				}
+				elseif (is_array($value) && isset($value[$key])) {
 					$value = $value[$key];
 				}
 				else {
