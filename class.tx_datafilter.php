@@ -51,15 +51,13 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $this->table, "uid = '".$this->uid."'");
 		if ($res || $GLOBALS['TYPO3_DB']->sql_num_rows($res) == 0) {
 			$this->filterData = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-			if (!empty($this->filterData['configuration'])) {
-					// Handle all parts of the filter configuration
-				$this->defineFilterConfiguration($this->filterData['configuration']);
-				$this->filter['logicalOperator'] = $this->filterData['logical_operator'];
-				$this->defineLimit($this->filterData['limit_start'], $this->filterData['limit_offset']);
-				$this->defineSorting($this->filterData['orderby']);
-				if (!empty($this->filterData['additional_sql'])) {
-					$this->filter['rawSQL'] = $this->filterData['additional_sql'];
-				}
+				// Handle all parts of the filter configuration
+			$this->defineFilterConfiguration($this->filterData['configuration']);
+			$this->filter['logicalOperator'] = $this->filterData['logical_operator'];
+			$this->defineLimit($this->filterData['limit_start'], $this->filterData['limit_offset']);
+			$this->defineSorting($this->filterData['orderby']);
+			if (!empty($this->filterData['additional_sql'])) {
+				$this->filter['rawSQL'] = $this->filterData['additional_sql'];
 			}
 		}
 		else {
@@ -152,26 +150,31 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 	 * @return	void
 	 */
 	protected function defineLimit($maxConfiguration, $offsetConfiguration) {
-		try {
-			$max = $this->evaluateExpression($maxConfiguration);
-			if (empty($offsetConfiguration)) {
-				$offset = 0;
+		if (empty($maxConfiguration)) {
+			$max = 0;
+		}
+		else {
+			try {
+				$max = $this->evaluateExpression($maxConfiguration);
+				if (empty($offsetConfiguration)) {
+					$offset = 0;
+				}
+				else {
+					try {
+						$offset = $this->evaluateExpression($offsetConfiguration);
+					}
+						// Do nothing special about exception, but exit process
+					catch (Exception $e) {
+						return;
+					}
+				}
 			}
-			else {
-				try {
-					$offset = $this->evaluateExpression($offsetConfiguration);
-					$this->filter['limit'] = array('max' => $max, 'offset' => $offset);
-				}
-					// Do nothing special about exception, but exit process
-				catch (Exception $e) {
-					return;
-				}
+				// Do nothing special about exception, but exit process
+			catch (Exception $e) {
+				return;
 			}
 		}
-			// Do nothing special about exception, but exit process
-		catch (Exception $e) {
-			return;
-		}
+		$this->filter['limit'] = array('max' => $max, 'offset' => $offset);
 	}
 
 	/**
@@ -181,6 +184,9 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 	 * @return	void
 	 */
 	protected function defineSorting($orderConfiguration) {
+		if (empty($orderConfiguration)) {
+			return;
+		}
 			// Split the configuration into individual lines
 		$configurationItems = $this->parseConfiguration($orderConfiguration);
 		$configFlag = 1;
