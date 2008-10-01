@@ -90,17 +90,17 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 			$valueExpression = $matches[2];
 			$value = $this->evaluateExpression($valueExpression);
 				// If the value is an array, check that operator is able to handle multiple values
-				// Only "in" and "ingroup" can do that. If the operator is not one of these, switch it to "in"
+				// Only "in", "andgroup" and "orgroup" can do that. If the operator is not one of these, switch it to "in"
 				// Values from the array are simple concatenated with a comma
 			if (is_array($value)) {
-				if ($operator != 'ingroup' && $operator != 'in') {
+				if ($operator != 'andgroup' && $operator != 'orgroup' && $operator != 'in') {
 					$operator = 'in';
 				}
 				$value = implode(',', $value);
-				$conditions = array(0 => array('operator' => $operator, 'value' => $value));
+				$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => array(0 => array('operator' => $operator, 'value' => $value)));
 			}
-				// The value is not an array
-			else {
+				// The value is not an array and is not an empty string either
+			elseif ($value != '') {
 					// If value is an interval, this requires more processing
 					// The 2 boundaries of the interval must be extracted and the simple operator replaced by 2 conditions
 				$matches = array();
@@ -137,8 +137,8 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 				else {
 					$conditions = array(0 => array('operator' => $operator, 'value' => $value));
 				}
+				$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => $conditions);
 			}
-			$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => $conditions);
 		}
 	}
 
