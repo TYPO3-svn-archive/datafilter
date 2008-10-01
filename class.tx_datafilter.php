@@ -81,63 +81,90 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 			$fullField = $matches[0];
 			if (strpos($fullField, '.') === false) {
 				$table = '';
-				$field = $fullField;
+				$field = trim($fullField);
 			}
 			else {
 				list($table, $field) = t3lib_div::trimExplode('.', $fullField);
 			}
+				// Table name name may need to be interpreted
+				// This is the case when the table name is stored within curly braces
+			if (!empty($table) && strpos($table, '{') === 0) {
+				try {
+					$table = $this->evaluateExpression(substr($table, 1, strlen($table) -2));
+				}
+					// The table name could not be evaluated, just set it to blank
+				catch (Exception $e) {
+					$table = '';
+				}
+			}
+				// Field name name may need to be interpreted too
+			if (strpos($field, '{') === 0) {
+				try {
+					$field = $this->evaluateExpression(substr($field, 1, strlen($field) -2));
+				}
+					// The field name could not be evaluated, skip to next value
+				catch (Exception $e) {
+					continue;
+				}
+			}
 			$operator = strtolower($matches[1]);
 			$valueExpression = $matches[2];
-			$value = $this->evaluateExpression($valueExpression);
-				// If the value is an array, check that operator is able to handle multiple values
-				// Only "in", "andgroup" and "orgroup" can do that. If the operator is not one of these, switch it to "in"
-				// Values from the array are simple concatenated with a comma
-			if (is_array($value)) {
-				if ($operator != 'andgroup' && $operator != 'orgroup' && $operator != 'in') {
-					$operator = 'in';
+			try {
+				$value = $this->evaluateExpression($valueExpression);
+					// If the value is an array, check that operator is able to handle multiple values
+					// Only "in", "andgroup" and "orgroup" can do that. If the operator is not one of these, switch it to "in"
+					// Values from the array are simple concatenated with a comma
+				if (is_array($value)) {
+					if ($operator != 'andgroup' && $operator != 'orgroup' && $operator != 'in') {
+						$operator = 'in';
+					}
+					$value = implode(',', $value);
+					$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => array(0 => array('operator' => $operator, 'value' => $value)));
 				}
-				$value = implode(',', $value);
-				$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => array(0 => array('operator' => $operator, 'value' => $value)));
+					// The value is not an array and is not an empty string either
+				elseif ($value != '') {
+						// If value is an interval, this requires more processing
+						// The 2 boundaries of the interval must be extracted and the simple operator replaced by 2 conditions
+					$matches = array();
+					$matching = preg_match_all('/([\[\]])([^,]*),(\w*)([\[\]])/', $value, $matches);
+	//t3lib_div::debug(array('value' => $value, 'num' => $matching, 'matches' => $matches));
+						// If the expression has matched, we have an interval
+					if ($matching == 1) {
+						$openingBracket = $matches[1][0];
+						$lowerBoundary = $matches[2][0];
+						$upperBoundary = $matches[3][0];
+						$closingBracket = $matches[4][0];
+						$conditions = array();
+							// Handle lower boundary, only if it's not * (= -infinity)
+						if ($lowerBoundary != '*') {
+							if ($openingBracket == ']') {
+								$operator = '>';
+							}
+							else {
+								$operator = '>=';
+							}
+							$conditions[] = array('operator' => $operator, 'value' => $lowerBoundary);
+						}
+							// Handle upper boundary, only if it's not * (= +infinity)
+						if ($upperBoundary != '*') {
+							if ($closingBracket == '[') {
+								$operator = '<';
+							}
+							else {
+								$operator = '<=';
+							}
+							$conditions[] = array('operator' => $operator, 'value' => $upperBoundary);
+						}
+					}
+					else {
+						$conditions = array(0 => array('operator' => $operator, 'value' => $value));
+					}
+					$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => $conditions);
+				}
 			}
-				// The value is not an array and is not an empty string either
-			elseif ($value != '') {
-					// If value is an interval, this requires more processing
-					// The 2 boundaries of the interval must be extracted and the simple operator replaced by 2 conditions
-				$matches = array();
-				$matching = preg_match_all('/([\[\]])([^,]*),(\w*)([\[\]])/', $value, $matches);
-//t3lib_div::debug(array('value' => $value, 'num' => $matching, 'matches' => $matches));
-					// If the expression has matched, we have an interval
-				if ($matching == 1) {
-					$openingBracket = $matches[1][0];
-					$lowerBoundary = $matches[2][0];
-					$upperBoundary = $matches[3][0];
-					$closingBracket = $matches[4][0];
-					$conditions = array();
-						// Handle lower boundary, only if it's not * (= -infinity)
-					if ($lowerBoundary != '*') {
-						if ($openingBracket == ']') {
-							$operator = '>';
-						}
-						else {
-							$operator = '>=';
-						}
-						$conditions[] = array('operator' => $operator, 'value' => $lowerBoundary);
-					}
-						// Handle upper boundary, only if it's not * (= +infinity)
-					if ($upperBoundary != '*') {
-						if ($closingBracket == '[') {
-							$operator = '<';
-						}
-						else {
-							$operator = '<=';
-						}
-						$conditions[] = array('operator' => $operator, 'value' => $upperBoundary);
-					}
-				}
-				else {
-					$conditions = array(0 => array('operator' => $operator, 'value' => $value));
-				}
-				$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => $conditions);
+				// The value could not be evaluated, skip to next value
+			catch (Exception $e) {
+				continue;
 			}
 		}
 	}
