@@ -189,9 +189,9 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 					try {
 						$offset = $this->evaluateExpression($offsetConfiguration);
 					}
-						// Do nothing special about exception, but exit process
+						// If offset expression could not be evaluated, default to 0
 					catch (Exception $e) {
-						return;
+						$offset = 0;
 					}
 				}
 			}
