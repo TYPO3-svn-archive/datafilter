@@ -78,7 +78,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 		$configurationItems = $this->parseConfiguration($configuration);
 		foreach ($configurationItems as $line) {
 			$matches = preg_split('/\s/', $line, -1, PREG_SPLIT_NO_EMPTY);
-			$fullField = $matches[0];
+			$fullField = array_shift($matches);
 			if (strpos($fullField, '.') === false) {
 				$table = '';
 				$field = trim($fullField);
@@ -107,8 +107,8 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 					continue;
 				}
 			}
-			$operator = strtolower($matches[1]);
-			$valueExpression = $matches[2];
+			$operator = strtolower(array_shift($matches));
+			$valueExpression = implode(' ', $matches);
 			try {
 				$value = $this->evaluateExpression($valueExpression);
 					// If the value is an array, check that operator is able to handle multiple values
@@ -122,12 +122,11 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 					$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => array(0 => array('operator' => $operator, 'value' => $value)));
 				}
 					// The value is not an array and is not an empty string either
-				elseif ($value != '') {
+				elseif ($value !== '') {
 						// If value is an interval, this requires more processing
 						// The 2 boundaries of the interval must be extracted and the simple operator replaced by 2 conditions
 					$matches = array();
 					$matching = preg_match_all('/([\[\]])([^,]*),(\w*)([\[\]])/', $value, $matches);
-	//t3lib_div::debug(array('value' => $value, 'num' => $matching, 'matches' => $matches));
 						// If the expression has matched, we have an interval
 					if ($matching == 1) {
 						$openingBracket = $matches[1][0];
@@ -269,30 +268,59 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 			throw new Exception('Empty filter expression received');
 		}
 		else {
-				// If there's no colon (:) in the expression, take it to be a litteral value and return it as is
-			if (strpos($expression, ':') === false) {
-				return $expression;
-			}
-			else {
-				list($key, $indices) = t3lib_div::trimExplode(':', $expression);
-				$key = strtolower($key);
-				switch ($key) {
-					case 'tsfe':
-						$value = $this->getValue($GLOBALS['TSFE'], $indices);
-						break;
-					case 'page':
-						$value = $this->getValue($GLOBALS['TSFE']->page, $indices);
-						break;
-					case 'gp':
-						$value = $this->getValue(array_merge(t3lib_div::_GET(), t3lib_div::_POST()), $indices);
-						break;
-					case 'vars':
-						$value = $this->getValue($this->vars, $indices);
-						break;
+				// An expression may contain several expressions as alternate values, separated by a double slash (//)
+			$allExpressions = t3lib_div::trimExplode('//', $expression);
+			foreach ($allExpressions as $anExpression) {
+					// If there's no colon (:) in the expression, take it to be a litteral value and return it as is
+				if (strpos($anExpression, ':') === false) {
+					return $anExpression;
+				}
+				else {
+					list($key, $indices) = t3lib_div::trimExplode(':', $anExpression);
+					$key = strtolower($key);
+					switch ($key) {
+						case 'tsfe':
+							try {
+								$value = $this->getValue($GLOBALS['TSFE'], $indices);
+								return $value;
+							}
+							catch (Exception $e) {
+								continue;
+							}
+							break;
+						case 'page':
+							try {
+								$value = $this->getValue($GLOBALS['TSFE']->page, $indices);
+								return $value;
+							}
+							catch (Exception $e) {
+								continue;
+							}
+							break;
+						case 'gp':
+							try {
+								$value = $this->getValue(array_merge(t3lib_div::_GET(), t3lib_div::_POST()), $indices);
+								return $value;
+							}
+							catch (Exception $e) {
+								continue;
+							}
+							break;
+						case 'vars':
+							try {
+								$value = $this->getValue($this->vars, $indices);
+								return $value;
+							}
+							catch (Exception $e) {
+								continue;
+							}
+							break;
+					}
 				}
 			}
 		}
-		return $value;
+			// If we have come all this way and found no value, throw an exception
+		throw new Exception('No value found for expression: '.$expression);
 	}
 
 	/**
@@ -338,7 +366,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 		$allLines = t3lib_div::trimExplode("\n", $text, 1);
 		foreach ($allLines as $aLine) {
 				// Take only line that don't start with # or // (comments)
-			if (strpos($aLine, '#') === false && strpos($aLine, '//') === false) {
+			if (strpos($aLine, '#') !== 0 && strpos($aLine, '//') !== 0) {
 				$lines[] = $aLine;
 			}
 		}
