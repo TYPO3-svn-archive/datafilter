@@ -47,23 +47,15 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 			// Initialise the filter structure
 		$this->filter = array('filters' => array(), 'logicalOperator' => 'AND', 'limit' => array(), 'orderby' => array(), 'rawSQL' => '');
 
-			// Get the data filter's record
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $this->table, "uid = '".$this->uid."'");
-		if ($res || $GLOBALS['TYPO3_DB']->sql_num_rows($res) == 0) {
-			$this->filterData = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-				// Handle all parts of the filter configuration
-			$this->defineFilterConfiguration($this->filterData['configuration']);
-			$this->filter['logicalOperator'] = $this->filterData['logical_operator'];
-			$this->defineLimit($this->filterData['limit_start'], $this->filterData['limit_offset']);
-			$this->defineSorting($this->filterData['orderby']);
-			if (!empty($this->filterData['additional_sql'])) {
-				$this->filter['rawSQL'] = $this->filterData['additional_sql'];
-			}
+			// Handle all parts of the filter configuration
+		$this->defineFilterConfiguration($this->filterData['configuration']);
+		$this->filter['logicalOperator'] = $this->filterData['logical_operator'];
+		$this->defineLimit($this->filterData['limit_start'], $this->filterData['limit_offset']);
+		$this->defineSorting($this->filterData['orderby']);
+		if (!empty($this->filterData['additional_sql'])) {
+			$this->filter['rawSQL'] = $this->filterData['additional_sql'];
 		}
-		else {
-			// An error occurred querying the database
-			throw new Exception('Error getting Data Filter information');
-		}
+
 		return $this->filter;
 	}
 
