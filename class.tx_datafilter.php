@@ -69,7 +69,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 	protected function defineFilterConfiguration($configuration) {
 			// Split the configuration into individual lines
 		$configurationItems = $this->parseConfiguration($configuration);
-		foreach ($configurationItems as $line) {
+		foreach ($configurationItems as $index => $line) {
 			$matches = preg_split('/\s/', $line, -1, PREG_SPLIT_NO_EMPTY);
 			$fullField = array_shift($matches);
 			if (strpos($fullField, '.') === false) {
@@ -112,7 +112,8 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 						$operator = 'in';
 					}
 					$value = implode(',', $value);
-					$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => array(0 => array('operator' => $operator, 'value' => $value)));
+					$filterConfiguration = array('table' => $table, 'field' => $field, 'conditions' => array(0 => array('operator' => $operator, 'value' => $value)));
+					$this->filter['filters'][$index] = $filterConfiguration;
 				}
 					// The value is not an array and is not an empty string either
 				elseif ($value !== '') {
@@ -151,7 +152,8 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 					else {
 						$conditions = array(0 => array('operator' => $operator, 'value' => $value));
 					}
-					$this->filter['filters'][] = array('table' => $table, 'field' => $field, 'conditions' => $conditions);
+					$filterConfiguration = array('table' => $table, 'field' => $field, 'conditions' => $conditions);
+					$this->filter['filters'][$index] = $filterConfiguration;
 				}
 			}
 				// The value could not be evaluated, skip to next value
