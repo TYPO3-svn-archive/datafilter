@@ -27,14 +27,13 @@
 require_once(t3lib_extMgm::extPath('basecontroller', 'services/class.tx_basecontroller_filterbase.php'));
 
 /**
- * Date Filter service for the 'datafilter' extension.
+ * Data Filter service for the 'datafilter' extension.
  *
  * @author	Francois Suter (Cobweb) <typo3@cobweb.ch>
  * @package	TYPO3
  * @subpackage	tx_datafilter
  */
 class tx_datafilter extends tx_basecontroller_filterbase {
-	protected $filter; // Will contain the complete filter structure
 
 // Data Filter interface methods
 
@@ -44,8 +43,10 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 	 * @return	array	standardised filter structure
 	 */
 	public function getFilter() {
-			// Initialise the filter structure
-		$this->filter = array('filters' => array(), 'logicalOperator' => 'AND', 'limit' => array(), 'orderby' => array(), 'rawSQL' => '');
+			// Initialise the filter structure, if not defined yet
+		if (!isset($this->filter)) {
+			$this->filter = array('filters' => array(), 'logicalOperator' => 'AND', 'limit' => array(), 'orderby' => array(), 'rawSQL' => '');
+		}
 
 			// Handle all parts of the filter configuration
 		$this->defineFilterConfiguration($this->filterData['configuration']);
