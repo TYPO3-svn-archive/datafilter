@@ -245,7 +245,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 				else {
 					$order = 'ASC'; // Default sorting
 				}
-				$this->filter['orderby'][] = array('table' => $table, 'field' => $field, 'order' => $order);
+				$this->filter['orderby'][$i] = array('table' => $table, 'field' => $field, 'order' => $order);
 			}
 		}
 	}
