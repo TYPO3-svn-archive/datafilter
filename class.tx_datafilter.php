@@ -311,7 +311,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 							}
 							break;
 						case 'date':
-							$value = date($indices);
+							return date($indices);
 							break;
 					}
 				}
