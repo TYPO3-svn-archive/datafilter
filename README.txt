@@ -1,1 +1,0 @@
-For the use of Data Filters, please refer to the Display Controller extension.
