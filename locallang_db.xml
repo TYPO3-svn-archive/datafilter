@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'datafilter'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_datafilter_filters">Data Filters</label>
+			<label index="tx_datafilter_filters.title">Title</label>
+			<label index="tx_datafilter_filters.configuration">Filter Configuration</label>
+			<label index="tx_datafilter_filters.logical_operator">Logical operator</label>
+			<label index="tx_datafilter_filters.logical_operator.I.0">AND</label>
+			<label index="tx_datafilter_filters.logical_operator.I.1">OR</label>
+			<label index="tx_datafilter_filters.orderby">Order By Configuration</label>
+			<label index="tx_datafilter_filters.limit_start">Max items per view</label>
+			<label index="tx_datafilter_filters.limit_offset">Start at page (offset)</label>
+			<label index="tx_datafilter_filters.limit_pointer">Start at item (pointer)</label>
+			<label index="tx_datafilter_filters.session_key">Key for session storage</label>
+			<label index="tx_datafilter_filters.key_per_page">Store only for current page</label>
+			<label index="tx_datafilter_filters.pagination">Pagination (limit)</label>
+			<label index="wizards.add_datafilter">Add a Data Filter</label>
+		</languageKey>
+	</data>
+</T3locallang>

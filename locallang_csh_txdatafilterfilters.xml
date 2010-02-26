@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<!-- $Id: locallang_csh_txdatafilterfilters.xml 253 2009-11-03 15:02:47Z fsuter $-->
+<T3locallang>
+	<meta type="array">
+		<description>Contents of datafilter csh</description>
+		<type>CSH</type>
+		<csh_table>tx_datafilter_filters</csh_table>
+		<fileId>EXT:dataquery/locallang_csh_txdatafilterfilters.xml</fileId>
+		<labelContext type="array">
+		</labelContext>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index=".alttitle">Data Filters</label>
+			<label index=".description">Data Filters are a tool designed to retrieve values from a variety of sources and pass them to a Data Provider within the Tesseract framework</label>
+			<label index=".syntax">
+				Data Filters use a syntax that is close to the one used by the getText function of standard TypoScript.
+				It is used to retrieve values that are passed on to a Data Provider, in order to filter, limit and order the data retrieved by the Data Provider.
+			</label>
+			<label index="hidden.alttitle">Hide</label>
+			<label index="hidden.description">This field is not actively used inside Tesseract.</label>
+			<label index="hidden.details">
+				This field is not considered by the existing components of Tesseract. It could be used to give a visual indication of an obsolete filter.
+				May be used actively in the future or remove altogether.
+			</label>
+			<label index="title.alttitle">Title</label>
+			<label index="title.description">Some significant name or label for the filter.</label>
+			<label index="configuration.alttitle">Filter configuration</label>
+			<label index="configuration.description">This is where the filter is defined.</label>
+			<label index="configuration.details">
+				The Data Filter uses a syntax that is close to the one used by the getText function of standard TypoScript, but not completely identical. Each line represents one condition. The syntax is the following:
+
+				[tag ::] name_of_item_to_test = [key :] value
+
+				The tag is used when a filter is stored into session memory, to retrieve its value. This part is optional.
+				The next part must match the name of the item that is going to be tested for the value. For example, in the case the filter is injected into a SQL query, the name of the item will be something like: tablename.tablefield.
+				After the equals (=) sign there can be either a simple value (a number or a string) or an expression that will be parsed (refer to the Base Controller manual for more details on expressions).
+			</label>
+			<label index="logical_operator.alttitle">Logical operator</label>
+			<label index="logical_operator.description">Logical operator to be used between each condition defined in the filter.</label>
+			<label index="orderby.alttitle">Ordering configuration</label>
+			<label index="orderby.description">Definition of ordering criteria (field and sorting direction) to be passed to the Data Provider.</label>
+			<label index="orderby.details">
+				This field uses a the following syntax:
+
+                                field = [key :] value
+                                order = [key :] value
+
+                                "field" is used to define which field will be used for ordering. If the filter is injected into a SQL query, the field will have a syntax like tablename.tablefield.
+                                "order" is used to define in which order the data should be sorted. Accepted values are "asc" or "desc". If order is not defined, "asc" will be assumed.
+                                After the equals (=) sign there can be either a simple value (a number or a string) or an expression that will be parsed (refer to the Base Controller manual for more details on expressions).
+			</label>
+			<label index="limit_start.alttitle">Items per page</label>
+			<label index="limit_start.description">Number of items to display at a time.</label>
+			<label index="limit_start.details">Either a simple value or an expression (see Base Controller manual) can be used.</label>
+			<label index="limit_offset.alttitle">Start at page</label>
+			<label index="limit_offset.description">When results are paginated, which page to start.</label>
+			<label index="limit_offset.details">Either a simple value or an expression (see Base Controller manual) can be used.</label>
+			<label index="limit_pointer.alttitle">Start at item</label>
+			<label index="limit_pointer.description">Number of the item to start the display at.</label>
+			<label index="limit_pointer.details">Either a simple value or an expression (see Base Controller manual) can be used.</label>
+			<label index="session_key.alttitle">Key for storage</label>
+			<label index="session_key.description">Name to use for storing the filter into session memory.</label>
+			<label index="session_key.details">
+				This must be a simple string. As soon as this field is not empty, the filter is stored into session.
+				The implication if that if a visitor comes back to the same page or some other page containing Tesseract elements refering to that stored filter, previously entered values will be preserved.
+			</label>
+			<label index="key_per_page.alttitle">Limit to page</label>
+			<label index="key_per_page.description">Check this box to restrict session storage mechanism to current page only.</label>
+		</languageKey>
+	</data>
+</T3locallang>
