@@ -30,7 +30,7 @@
  * @package		TYPO3
  * @subpackage	tx_datafilter
  *
- * $Id: interface.tx_datafilter_postprocessfilter.php 253 2009-11-03 15:02:47Z fsuter $
+ * $Id$
  */
 interface tx_datafilter_postprocessFilter {
 	/**

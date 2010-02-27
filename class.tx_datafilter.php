@@ -20,8 +20,6 @@
 *  GNU General Public License for more details.
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
-*
-* $Id: class.tx_datafilter.php 265 2009-12-28 11:26:19Z fsuter $
 ***************************************************************/
 
 require_once(t3lib_extMgm::extPath('basecontroller', 'services/class.tx_basecontroller_filterbase.php'));
@@ -33,6 +31,8 @@ require_once(t3lib_extMgm::extPath('basecontroller', 'lib/class.tx_basecontrolle
  * @author		Francois Suter (Cobweb) <typo3@cobweb.ch>
  * @package		TYPO3
  * @subpackage	tx_datafilter
+ *
+ * $Id: class.tx_datafilter.php 265 2009-12-28 11:26:19Z fsuter $
  */
 class tx_datafilter extends tx_basecontroller_filterbase {
 
