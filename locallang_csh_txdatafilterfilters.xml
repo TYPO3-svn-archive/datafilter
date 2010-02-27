@@ -27,38 +27,63 @@
 			<label index="title.description">Some significant name or label for the filter.</label>
 			<label index="configuration.alttitle">Filter configuration</label>
 			<label index="configuration.description">This is where the filter is defined.</label>
-			<label index="configuration.details">
-				The Data Filter uses a syntax that is close to the one used by the getText function of standard TypoScript, but not completely identical. Each line represents one condition. The syntax is the following:
+			<label index="configuration.syntax">
+				Each line in the filter configurtaion field represents one condition. The syntax is the following:
 
-				[tag ::] name_of_item_to_test = [key :] value
+					[tag ::] name_of_item_to_test = [key :] value
 
 				The tag is used when a filter is stored into session memory, to retrieve its value. This part is optional.
 				The next part must match the name of the item that is going to be tested for the value. For example, in the case the filter is injected into a SQL query, the name of the item will be something like: tablename.tablefield.
-				After the equals (=) sign there can be either a simple value (a number or a string) or an expression that will be parsed (refer to the Base Controller manual for more details on expressions).
+				After the equals (=) sign (or some other operator) there can be either a simple value (a number or a string) or an expression that will be parsed (refer to the "Expressions" manual for more details on expressions).
+			</label>
+			<label index="configuration.details">
+				Here are some example configurations (the explanations assume the filters are used in SQL queries on typical TYPO3 tables):
+
+					tt_content.cruser_id = 2
+					&lt;em&gt;Content elements created by BE user with uid = 2&lt;/em&gt;
+
+					pages.uid = [10,50]
+					&lt;em&gt;Pages whose uid is between 10 and 50 (inclusive)&lt;/em&gt;
+
+					tt_content.header like gp:search // clear_cache
+					&lt;em&gt;Content elements whose header contains some search string passed as GET/POST parameter. Plus clear the cache for that particular filter configuration.&lt;/em&gt;
+
+					pages.starttime &gt; date:U
+					&lt;em&gt;Pages whose starttime is greater than now&lt;/em&gt;
+
+					pages.crdate &gt;= {gp:year-&gt;intval // date:Y}-01-01-&gt;strtotime
+					&lt;em&gt;Pages whose creation date is greater than or equals to the Jan 1st on a year given by a GET/POST variable called "year" (cast to integer; defaults to current year if GET/POST variable is not defined). &lt;/em&gt;
 			</label>
 			<label index="logical_operator.alttitle">Logical operator</label>
 			<label index="logical_operator.description">Logical operator to be used between each condition defined in the filter.</label>
 			<label index="orderby.alttitle">Ordering configuration</label>
 			<label index="orderby.description">Definition of ordering criteria (field and sorting direction) to be passed to the Data Provider.</label>
-			<label index="orderby.details">
+			<label index="orderby.syntax">
 				This field uses a the following syntax:
 
-                                field = [key :] value
-                                order = [key :] value
+					field = [key :] value
+					order = [key :] value
 
-                                "field" is used to define which field will be used for ordering. If the filter is injected into a SQL query, the field will have a syntax like tablename.tablefield.
-                                "order" is used to define in which order the data should be sorted. Accepted values are "asc" or "desc". If order is not defined, "asc" will be assumed.
-                                After the equals (=) sign there can be either a simple value (a number or a string) or an expression that will be parsed (refer to the Base Controller manual for more details on expressions).
+				"field" is used to define which field will be used for ordering. If the filter is injected into a SQL query, the field will have a syntax like tablename.tablefield.
+				"order" is used to define in which order the data should be sorted. Accepted values are "asc" or "desc". If order is not defined, "asc" will be assumed.
+				After the equals (=) sign there can be either a simple value (a number or a string) or an expression that will be parsed (refer to the "Expressions" manual for more details on expressions).
+			</label>
+			<label index="orderby.details">
+				Here's an example of ordering configuration:
+
+					field = vars:sort // pages.title
+					order = vars:order // asc
+					&lt;em&gt;The sorting field's is taken from a plugin variable called "sort". It defaults to "pages.title" if that variable is not defined. The same for the order, taken from a variable called "order" and which defaults to "asc".&lt;/em&gt;
 			</label>
 			<label index="limit_start.alttitle">Items per page</label>
 			<label index="limit_start.description">Number of items to display at a time.</label>
-			<label index="limit_start.details">Either a simple value or an expression (see Base Controller manual) can be used.</label>
+			<label index="limit_start.details">Either a simple value or an expression (see "Expressions" manual) can be used.</label>
 			<label index="limit_offset.alttitle">Start at page</label>
 			<label index="limit_offset.description">When results are paginated, which page to start.</label>
-			<label index="limit_offset.details">Either a simple value or an expression (see Base Controller manual) can be used.</label>
+			<label index="limit_offset.details">Either a simple value or an expression (see "Expressions" manual) can be used.</label>
 			<label index="limit_pointer.alttitle">Start at item</label>
 			<label index="limit_pointer.description">Number of the item to start the display at.</label>
-			<label index="limit_pointer.details">Either a simple value or an expression (see Base Controller manual) can be used.</label>
+			<label index="limit_pointer.details">Either a simple value or an expression (see "Expressions" manual) can be used.</label>
 			<label index="session_key.alttitle">Key for storage</label>
 			<label index="session_key.description">Name to use for storing the filter into session memory.</label>
 			<label index="session_key.details">
