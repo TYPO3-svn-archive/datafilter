@@ -25,6 +25,7 @@
 ***************************************************************/
 
 require_once(t3lib_extMgm::extPath('basecontroller', 'services/class.tx_basecontroller_filterbase.php'));
+require_once(t3lib_extMgm::extPath('basecontroller', 'lib/class.tx_basecontroller_utilities.php'));
 
 /**
  * Data Filter service for the 'datafilter' extension.
@@ -100,7 +101,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 	 */
 	protected function defineFilterConfiguration($configuration) {
 			// Split the configuration into individual lines
-		$configurationItems = $this->parseConfiguration($configuration);
+		$configurationItems = tx_basecontroller_utilities::parseConfigurationField($configuration);
 		foreach ($configurationItems as $index => $line) {
 				// Parse the configuration line for possible subexpressions
 			$parsedLine = tx_expressions_parser::evaluateString($line, false);
@@ -261,7 +262,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 			return;
 		}
 			// Split the configuration into individual lines
-		$configurationItems = $this->parseConfiguration($orderConfiguration);
+		$configurationItems = tx_basecontroller_utilities::parseConfigurationField($orderConfiguration);
 		$items = array();
 			// In a first pass, we store all the configuration items as we go along,
 			// storing their type and value
@@ -294,26 +295,6 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 				$this->filter['orderby'][$i] = array('table' => $table, 'field' => $field, 'order' => $order);
 			}
 		}
-	}
-
-	/**
-	 * This method reads a configuration field and returns a cleaned up set of configuration statements
-	 * ignoring blank lines and comments
-	 *
-	 * @param	string	$text: full configuration text
-	 * @return	array	List of configuration statements
-	 */
-	protected function parseConfiguration($text) {
-		$lines = array();
-			// Explode all the lines on the return character
-		$allLines = t3lib_div::trimExplode("\n", $text, 1);
-		foreach ($allLines as $aLine) {
-				// Take only line that don't start with # or // (comments)
-			if (strpos($aLine, '#') !== 0 && strpos($aLine, '//') !== 0) {
-				$lines[] = $aLine;
-			}
-		}
-		return $lines;
 	}
 
 	/**
