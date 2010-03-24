@@ -18,13 +18,13 @@ $TCA['tx_datafilter_filters'] = array (
 			'disabled' => 'hidden',
 		),
 		'dividers2tabs' => TRUE,
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'res/icons/icon_tx_datafilter_filters.gif',
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'tca.php',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'res/icons/icon_tx_datafilter_filters.gif',
 	),
 );
 
 // Add context sensitive help (csh) for this table
-t3lib_extMgm::addLLrefForTCAdescr('tx_datafilter_filters', t3lib_extMgm::extPath($_EXTKEY).'locallang_csh_txdatafilterfilters.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_datafilter_filters', t3lib_extMgm::extPath($_EXTKEY) . 'locallang_csh_txdatafilterfilters.xml');
 
 // Register datafilter as a Data Filter
 

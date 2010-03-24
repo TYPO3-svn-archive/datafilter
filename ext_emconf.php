@@ -17,7 +17,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'author' => 'Francois Suter (Cobweb)',
 	'author_email' => 'typo3@cobweb.ch',
 	'shy' => '',
-	'dependencies' => 'cms,basecontroller',
+	'dependencies' => 'cms',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
@@ -29,10 +29,10 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '0.10.1',
+	'version' => '0.11.0',
 	'constraints' => array(
 		'depends' => array(
-			'basecontroller' => '0.8.1-0.0.0',
+			'tesseract' => '0.1.0-0.0.0',
 		),
 		'conflicts' => array(
 		),

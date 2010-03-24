@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Francois Suter (Cobweb) <typo3@cobweb.ch>
+*  (c) 2008-2010 Francois Suter (Cobweb) <typo3@cobweb.ch>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,8 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('basecontroller', 'services/class.tx_basecontroller_filterbase.php'));
-require_once(t3lib_extMgm::extPath('basecontroller', 'lib/class.tx_basecontroller_utilities.php'));
+require_once(t3lib_extMgm::extPath('tesseract', 'services/class.tx_tesseract_filterbase.php'));
+require_once(t3lib_extMgm::extPath('tesseract', 'lib/class.tx_tesseract_utilities.php'));
 
 /**
  * Data Filter service for the 'datafilter' extension.
@@ -34,7 +34,7 @@ require_once(t3lib_extMgm::extPath('basecontroller', 'lib/class.tx_basecontrolle
  *
  * $Id: class.tx_datafilter.php 265 2009-12-28 11:26:19Z fsuter $
  */
-class tx_datafilter extends tx_basecontroller_filterbase {
+class tx_datafilter extends tx_tesseract_filterbase {
 
 // Data Filter interface methods
 
@@ -101,7 +101,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 	 */
 	protected function defineFilterConfiguration($configuration) {
 			// Split the configuration into individual lines
-		$configurationItems = tx_basecontroller_utilities::parseConfigurationField($configuration);
+		$configurationItems = tx_tesseract_utilities::parseConfigurationField($configuration);
 		foreach ($configurationItems as $index => $line) {
 				// Parse the configuration line for possible subexpressions
 			$parsedLine = tx_expressions_parser::evaluateString($line, false);
@@ -262,7 +262,7 @@ class tx_datafilter extends tx_basecontroller_filterbase {
 			return;
 		}
 			// Split the configuration into individual lines
-		$configurationItems = tx_basecontroller_utilities::parseConfigurationField($orderConfiguration);
+		$configurationItems = tx_tesseract_utilities::parseConfigurationField($orderConfiguration);
 		$items = array();
 			// In a first pass, we store all the configuration items as we go along,
 			// storing their type and value
