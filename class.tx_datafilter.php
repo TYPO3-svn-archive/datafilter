@@ -154,9 +154,9 @@ class tx_datafilter extends tx_tesseract_filterbase {
 			$valueExpression = implode(' ', $matches);
 			try {
 				$value = tx_expressions_parser::evaluateExpression($valueExpression);
-					// Test special value "clear_cache"
+					// Test special value "\clear_cache" (or its old value "clear_cache")
 					// If the returned value is equal to this, it means the saved value must be removed
-				if ($value == 'clear_cache') {
+				if ($value == '\clear_cache' || $value == 'clear_cache') {
 					unset($this->filter['filters'][$index]);
 				} else {
 						// If the value is an array, check that operator is able to handle multiple values
@@ -212,13 +212,21 @@ class tx_datafilter extends tx_tesseract_filterbase {
 
 							// Normal filter, with no peculiarity, just set it
 						} else {
-								// Check if it's special value "empty" or "null"
-								// and make sure it's lowercase
-							$lowercaseValue = strtolower($value);
-							if ($lowercaseValue == 'empty') {
-								$value = 'empty';
-							} elseif ($lowercaseValue == 'null') {
-								$value = 'null';
+								// If the value starts with a backslash, it's a special one
+							if (strpos($value, '\\') === 0) {
+									// Check as lowercase
+								$lowercaseValue = strtolower($value);
+								switch ($lowercaseValue) {
+									case '\empty':
+										$value = '\empty';
+										break;
+									case '\null';
+										$value = '\null';
+										break;
+									case '\all':
+										$value = '\all';
+										break;
+								}
 							}
 							$conditions = array(0 => array('operator' => $operator, 'value' => $value));
 						}
