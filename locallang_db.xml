@@ -6,7 +6,7 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="tx_datafilter_filters">Data Filters</label>
+			<label index="tx_datafilter_filters">Data Filter</label>
 			<label index="tx_datafilter_filters.title">Title</label>
 			<label index="tx_datafilter_filters.configuration">Filter Configuration</label>
 			<label index="tx_datafilter_filters.logical_operator">Logical operator</label>
