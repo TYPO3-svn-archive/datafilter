@@ -102,11 +102,11 @@ $TCA['tx_datafilter_filters'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'hidden;;;;1-1-1, title;;;;2-2-2, configuration;;1;;3-3-3, orderby, --palette--;LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.pagination;2, session_key;;3;;7-7-7')
+		'0' => array('showitem' => 'hidden;;;;1-1-1, title;;;;2-2-2, configuration;;1;;3-3-3, orderby, --palette--;LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.pagination;2,--div--;LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.session, session_key;;3;;7-7-7')
 	),
 	'palettes' => array (
 		'1' => array('showitem' => 'logical_operator'),
-		'2' => array('showitem' => 'limit_start,limit_offset,limit_pointer', 'canNotCollapse' => 1),
+		'2' => array('showitem' => 'limit_start,--linebreak--,limit_offset,--linebreak--,limit_pointer', 'canNotCollapse' => 1),
 		'3' => array('showitem' => 'key_per_page'),
 	)
 );

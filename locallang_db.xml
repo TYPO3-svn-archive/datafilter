@@ -19,6 +19,7 @@
 			<label index="tx_datafilter_filters.session_key">Key for session storage</label>
 			<label index="tx_datafilter_filters.key_per_page">Store only for current page</label>
 			<label index="tx_datafilter_filters.pagination">Pagination (limit)</label>
+			<label index="tx_datafilter_filters.session">Session</label>
 			<label index="wizards.add_datafilter">Add a Data Filter</label>
 		</languageKey>
 	</data>
