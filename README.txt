@@ -1,1 +1,1 @@
-For the use of Data Filters, please refer to the Display Controller extension.
+Create complex Data Filters for use with the Tesseract Project. Refer to the manual for more details.

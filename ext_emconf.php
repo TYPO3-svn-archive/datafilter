@@ -1,27 +1,27 @@
 <?php
 
 ########################################################################
-# Extension Manager/Repository config file for ext: "datafilter"
+# Extension Manager/Repository config file for ext "datafilter".
 #
-# Auto generated 03-09-2008 14:00
+# Auto generated 27-09-2010 15:50
 #
 # Manual updates:
-# Only the data in the array - anything else is removed by next write.
-# "version" and "dependencies" must not be touched!
+# Only the data in the array - everything else is removed by next
+# writing. "version" and "dependencies" must not be touched!
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'Data Filter',
-	'description' => 'Provides a way to create complex filters that can be passed to a Data Provider for restricting the data it returns.',
+	'title' => 'Standard Data Filter - Tesseract project',
+	'description' => 'Provides a way to create complex filters that can be passed to a Data Provider for restricting the data it returns. More info on http://www.typo3-tesseract.com/',
 	'category' => 'fe',
 	'author' => 'Francois Suter (Cobweb)',
 	'author_email' => 'typo3@cobweb.ch',
 	'shy' => '',
-	'dependencies' => 'cms',
+	'dependencies' => 'tesseract,expressions',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
-	'state' => 'alpha',
+	'state' => 'stable',
 	'internal' => '',
 	'uploadfolder' => 0,
 	'createDirs' => '',
@@ -29,18 +29,21 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '0.14.0',
+	'version' => '1.0.0',
 	'constraints' => array(
 		'depends' => array(
 			'typo3' => '4.3.0-0.0.0',
-			'tesseract' => '0.7.0-0.0.0',
+			'tesseract' => '1.0.0-0.0.0',
+			'expressions' => '',
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
 		),
 	),
-	'_md5_values_when_last_written' => 'a:11:{s:9:"ChangeLog";s:4:"7cbf";s:10:"README.txt";s:4:"ee2d";s:12:"ext_icon.gif";s:4:"1bdc";s:17:"ext_localconf.php";s:4:"c298";s:14:"ext_tables.php";s:4:"e46e";s:14:"ext_tables.sql";s:4:"3c05";s:30:"icon_tx_datafilter_filters.gif";s:4:"475a";s:16:"locallang_db.xml";s:4:"26ed";s:7:"tca.php";s:4:"fb1e";s:19:"doc/wizard_form.dat";s:4:"f615";s:20:"doc/wizard_form.html";s:4:"3878";}',
+	'_md5_values_when_last_written' => 'a:16:{s:9:"ChangeLog";s:4:"1ab9";s:10:"README.txt";s:4:"3afe";s:23:"class.tx_datafilter.php";s:4:"afd8";s:16:"ext_autoload.php";s:4:"732f";s:12:"ext_icon.gif";s:4:"bec1";s:17:"ext_localconf.php";s:4:"d3ee";s:14:"ext_tables.php";s:4:"39d1";s:14:"ext_tables.sql";s:4:"972a";s:37:"locallang_csh_txdatafilterfilters.xml";s:4:"7abd";s:16:"locallang_db.xml";s:4:"24c3";s:7:"tca.php";s:4:"0e4d";s:14:"doc/manual.pdf";s:4:"610d";s:14:"doc/manual.sxw";s:4:"20ee";s:56:"interfaces/interface.tx_datafilter_postprocessfilter.php";s:4:"05b4";s:35:"res/icons/add_datafilter_wizard.gif";s:4:"8a58";s:40:"res/icons/icon_tx_datafilter_filters.gif";s:4:"dd56";}',
+	'suggests' => array(
+	),
 );
 
 ?>
