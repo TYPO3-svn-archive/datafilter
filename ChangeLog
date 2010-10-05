@@ -1,6 +1,7 @@
 2010-10-05 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
-	* Added a first unit test (more to come)
+	* Added some first unit tests (more to come)
+	* Corrected handling of array-type values in filters
 
 2010-09-27 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 

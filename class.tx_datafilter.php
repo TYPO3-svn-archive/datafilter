@@ -156,14 +156,8 @@ class tx_datafilter extends tx_tesseract_filterbase {
 				if ($value == '\clear_cache' || $value == 'clear_cache') {
 					unset($this->filter['filters'][$index]);
 				} else {
-						// If the value is an array, check that operator is able to handle multiple values
-						// Only "in", "andgroup" and "orgroup" can do that. If the operator is not one of these, switch it to "in"
-						// Values from the array are simple concatenated with a comma
+						// If the value is an array, just use it straightaway
 					if (is_array($value)) {
-						if ($operator != 'andgroup' && $operator != 'orgroup' && $operator != 'in') {
-							$operator = 'in';
-						}
-						$value = implode(',', $value);
 						$filterConfiguration = array(
 													'table' => $table,
 													'field' => $field,
@@ -349,10 +343,23 @@ class tx_datafilter extends tx_tesseract_filterbase {
 	 * @return	void
 	 */
 	protected function saveParsedFilter($index, $table, $field, $operator, $value) {
-		$keyForStorage = (empty($table)) ? '' : $table.'.';
+			// Assemble storage key
+		$keyForStorage = (empty($table)) ? '' : $table . '.';
 		$keyForStorage .= $field;
-		$condition = $operator.' '.$value;
-		if (!isset($this->filter['parsed']['filters'][$keyForStorage])) $this->filter['parsed']['filters'][$keyForStorage] = array();
+			// Initialize storage, if necessary
+		if (!isset($this->filter['parsed']['filters'][$keyForStorage])) {
+			$this->filter['parsed']['filters'][$keyForStorage] = array();
+		}
+			// Compute values to store
+			// If the value is an array, it is turned into a comma-separated string
+			// NOTE: this will obviously fail with multidimensional arrays, but the alternative is to serialize
+			// the value. This doesn't seem like a useful thing to do, since the values stored here are supposed
+			// to be retrievable by the filters themselves, which won't be able to handle serialized values.
+			// Thus the limitation to 1-dimensional arrays seems reasonable
+		if (is_array($value)) {
+			$value = implode(',', $value);
+		}
+		$condition = $operator . ' ' . $value;
 		$this->filter['parsed']['filters'][$keyForStorage][$index] = array('condition' => $condition, 'operator' => $operator, 'value' => $value);
 	}
 
