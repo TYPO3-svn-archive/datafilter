@@ -32,13 +32,16 @@
  * $Id$
  */
 class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
+	public function setUp() {
+		$_GET['tx_choice'] = array('foo', 'bar');
+	}
 
 	/**
 	 * Test the simplest possible filter: an equality with a fixed value
 	 *
 	 * @test
 	 */
-	public function simpleFilter() {
+	public function filterSimple() {
 			// Define the filter to parse
 		$filterDefinition = array(
 			'configuration' => 'tt_content.uid = 42',
@@ -79,6 +82,64 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 							'condition' => '= 42',
 							'operator' => '=',
 							'value' => '42'
+						)
+					)
+				)
+			)
+		);
+			// Check if the "structure" part if correct
+		$this->assertEquals($expectedResult, $actualResult);
+	}
+
+	/**
+	 * Test a filter with array-type values
+	 *
+	 * @test
+	 */
+	public function filterWithArrayValue() {
+			// Define the filter to parse
+		$filterDefinition = array(
+			'configuration' => 'tt_content.header like gp:tx_choice',
+			'logical_operator' => 'AND'
+		);
+		/**
+		 * @var tx_datafilter	$filterObject
+		 */
+		$filterObject = t3lib_div::makeInstance('tx_datafilter');
+		$filterObject->setData($filterDefinition);
+		$actualResult = $filterObject->getFilterStructure();
+			// Define the expected result
+		$expectedResult = array(
+			'filters' => array(
+				0 => array(
+					'table' => 'tt_content',
+					'field' => 'header',
+					'main' => FALSE,
+					'conditions' => array(
+						0 => array(
+							'operator' => 'like',
+							'value' => array(
+								'foo',
+								'bar'
+							)
+						)
+					)
+				)
+			),
+			'logicalOperator' => 'AND',
+			'limit' => array(
+				'max' => 0,
+				'offset' => 0,
+				'pointer' => 0
+			),
+			'orderby' => array(),
+			'parsed' => array(
+				'filters' => array(
+					'tt_content.header' => array(
+						0 => array(
+							'condition' => 'like foo,bar',
+							'operator' => 'like',
+							'value' => 'foo,bar'
 						)
 					)
 				)
