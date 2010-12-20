@@ -1,3 +1,7 @@
+2010-12-20 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Implemented changes in data filter structure with original information, resolves #11595
+
 2010-10-05 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Added some first unit tests (more to come)

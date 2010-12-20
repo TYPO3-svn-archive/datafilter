@@ -221,7 +221,7 @@ class tx_datafilter extends tx_tesseract_filterbase {
 							}
 							$conditions = array(0 => array('operator' => $operator, 'value' => $value));
 						}
-						$filterConfiguration = array('table' => $table, 'field' => $field, 'main' => $mainFlag, 'conditions' => $conditions);
+						$filterConfiguration = array('table' => $table, 'field' => $field, 'main' => $mainFlag, 'conditions' => $conditions, 'string' => $line);
 						$this->filter['filters'][$index] = $filterConfiguration;
 					}
 				}
