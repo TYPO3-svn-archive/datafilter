@@ -3,7 +3,7 @@ EXT: Data Filter
 Extension Key: datafilter
 Language: en
 Keywords: forEditors, forIntermediates
-Copyright 2008-2010, Francois Suter (Cobweb), <typo3@cobweb.ch>
+Copyright 2008-2011, Francois Suter (Cobweb), <typo3@cobweb.ch>
 
 This document is published under the Open Content License
 available from http://www.opencontent.org/opl.shtml
@@ -23,11 +23,10 @@ Input screen	4
 Filter Configuration	4
 Limits	7
 Ordering configuration	7
-Session storage	7
+Session storage	8
 Filter cache	8
 Known problems	9
 To-Do list	10
-ChangeLog	11
 
 Introduction
 What does it do?
@@ -54,7 +53,7 @@ Order By Configuration: see “Ordering Configuration” below.
 Pagination: see “Limits” below.
 Filter Configuration
 You may define as many filters as you want, each on a line. All filters will be linked to each other using the selected logical operator (AND or OR). The general syntax of a filter is the following:
-[main.][[table name].][field name] [operator] [value or expression]
+[extra keyword.][[table name].][field name] [operator] [value or expression]
 
 Example:
 uid = 12
@@ -62,9 +61,15 @@ pages.uid = page:uid
 main.tt_content.header like foo
 
 In both lines above, we are defining that the “uid” field of the “pages” table must be strictly equal to some value. In the first case, it is a simple number (12), that will be used as is. In the second case, the test value will be retrieved as the uid of the current page.
-The “main” keyword means that the condition should be applied to the “main condition” by the Data Provider. What this exactly means depends on the Data Provider. Let's consider Data Query as an example. This Provider will transform the conditions into SQL statements. The query in the provider will have a main table (the one in the FROM clause). It may also have secondary tables (linked using JOINs). By default filter conditions that relate to the main table are applied in the WHERE clause and those that relate to secondary tables apply to the ON clause of the relevant JOIN statement. Using the “main” keyword will force a condition that would normally be applied inside an ON clause to be moved to the WHERE clause.
-The “main” keyword (and its dot) is optional.
 It is also possible to omit the table name. It is up to the Data Provider to know what to do in such a case. In the case of Data Query, the condition will be considered to apply to the main table (the one in the FROM clause).
+Extra keywords
+There are two extra keywords that can be used before the table name: main and void. Usage of a special keyword (and its dot) is optional.
+The "main" keyword means that the condition should be applied to the "main condition" by the Data Provider. What this exactly means depends on the Data Provider. Let's consider Data Query as an example. This Provider will transform the conditions into SQL statements. The query in the provider will have a main table (the one in the FROM clause). It may also have secondary tables (linked using JOINs). By default filter conditions that relate to the main table are applied in the WHERE clause and those that relate to secondary tables apply to the ON clause of the relevant JOIN statement. Using the "main" keyword will force a condition that would normally be applied inside an ON clause to be moved to the WHERE clause.
+The "void" keyword means that the condition should be evaluated but not applied. The Data Provider receiving this condition should simply ignore. Such "void" filters are useful to pass some filter configuration down the component chain. Indeed since Data Providers include the filter information inside the data structure, it will be passed on to the Data Consumers. This makes it possible to get filter information in the Data Consumer, in order to display it or to react to it.
+Using a void filter
+The usefulness of "void" filters may not be obvious at first. An example may help. Imagine a list of blog entries, which can be filtered on month and year. Both the list of entries and the list of possible years and months to select from are displayed using Tesseract. When a month/year combination is selected, the list of blog entries is filtered accordingly.
+We would like the list of months and years to know about the selection too, so that we can highlight the current selection. But we don't want the month/year selection to apply to the months/years selector itself. By defining conditions on the month and year with the "void" flag, the month/year selector can know about the current selection without being affected by it.
+Operators
 The following operators are can be used:
 Symbol:
 Usage:
@@ -92,6 +97,7 @@ end
 Should be similar to the SQL LIKE operator, but testing the end of a word. This means the Data Provider is expected to prepend a wildcard to the value.
 
 Expressions are managed by the “expressions” extension. Any expression described in that extension's manual can be used here.
+
 On top of that some special values can be used in Data Filter. Special values all start with a backslash (\).
 Key:
 Explanations:
@@ -175,6 +181,7 @@ field = tx_specialsearch_pi1|sort // items.name
 order = tx_specialsearch_pi1|order
 
 In this case the name of the field to use for ordering will be fetched from variable  tx_specialsearch_pi1[sort]. If not defined, the default search will use the “name” field from the “items” table. The sorting order will be fetched from variable tx_specialsearch_pi1[order]. The order may be omitted and the Data Provider is expected to use some default sorting order.
+
 Session storage
 A filter can be stored into the session with the purpose of being accessed by another filter. To force a filter to be stored into the session, one must simply give it a session key (in the “Session” tab of the input screen).
 The next time this filter is called up, its result will be stored into the session with the key “foobar”. Let's assume the following configuration:
@@ -217,13 +224,4 @@ If you have any issues, please refer to the Tesseract Project web site (http://w
 To-Do list
 The roadmap for the evolution of this extension can be found on Forge: http://forge.typo3.org/projects/roadmap/extension-datafilter
 For feature requests, please open a report on Forge issue tracker: http://forge.typo3.org/projects/extension-datafilter/issues
-
-ChangeLog
-Version
-Changes:
-1.1.0
-Corrected handling of array-type values
-Added storage of original filter configuration inside filter structure (useful for debugging)
-1.0.0
-First public version
 

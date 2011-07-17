@@ -116,28 +116,35 @@ class tx_datafilter extends tx_tesseract_filterbase {
 			$table = '';
 			$field = trim($fullField);
 			$mainFlag = FALSE;
+			$voidFlag = FALSE;
 				// The full field syntax may actually contain the "main" keyword,
 				// the table name and the field name, each separated by dots (.)
 			if (strpos($fullField, '.') !== false) {
 				$fullFieldParts = t3lib_div::trimExplode('.', $fullField);
 					// The field is always the last part
 				$field = array_pop($fullFieldParts);
-					// If there's only one part left, it may be either the "main" keyword
+					// If there's only one part left, it may be either a special keyword
 					// or a table's name
 				if (count($fullFieldParts) == 1) {
 					$part = array_pop($fullFieldParts);
 					if ($part == 'main') {
 						$mainFlag = TRUE;
+					} elseif ($part == 'void') {
+						$voidFlag = TRUE;
 					} else {
 						$table = $part;
 					}
 
 					// If there are more than one parts left, we expect the first part
-					// to be "main" and the second part to be a table's name
+					// to be a special keyword and the second part to be a table's name
 				} else {
+						// NOTE: if the part does not match a keyword, it is ignored
+						// TODO: log a warning about invalid syntax
 					$part = array_shift($fullFieldParts);
 					if ($part == 'main') {
 						$mainFlag = TRUE;
+					} elseif ($part == 'void') {
+						$voidFlag = TRUE;
 					}
 						// Get the "last" part (if it's not the last, there's a syntax error)
 						// TODO: we could throw an exception in this case
@@ -162,7 +169,9 @@ class tx_datafilter extends tx_tesseract_filterbase {
 													'table' => $table,
 													'field' => $field,
 													'main' => $mainFlag,
-													'conditions' => array(0 => array('operator' => $operator, 'value' => $value))
+													'void' => $voidFlag,
+													'conditions' => array(0 => array('operator' => $operator, 'value' => $value)),
+													'string' => $line
 												);
 						$this->filter['filters'][$index] = $filterConfiguration;
 						$this->saveParsedFilter($index, $table, $field, $operator, $value);
@@ -221,7 +230,14 @@ class tx_datafilter extends tx_tesseract_filterbase {
 							}
 							$conditions = array(0 => array('operator' => $operator, 'value' => $value));
 						}
-						$filterConfiguration = array('table' => $table, 'field' => $field, 'main' => $mainFlag, 'conditions' => $conditions, 'string' => $line);
+						$filterConfiguration = array(
+							'table' => $table,
+							'field' => $field,
+							'main' => $mainFlag,
+							'void' => $voidFlag,
+							'conditions' => $conditions,
+							'string' => $line
+						);
 						$this->filter['filters'][$index] = $filterConfiguration;
 					}
 				}

@@ -60,12 +60,14 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 					'table' => 'tt_content',
 					'field' => 'uid',
 					'main' => FALSE,
+					'void' => FALSE,
 					'conditions' => array(
 						0 => array(
 							'operator' => '=',
 							'value' => '42'
 						)
-					)
+					),
+					'string' => 'tt_content.uid = 42'
 				)
 			),
 			'logicalOperator' => 'AND',
@@ -115,6 +117,7 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 					'table' => 'tt_content',
 					'field' => 'header',
 					'main' => FALSE,
+					'void' => FALSE,
 					'conditions' => array(
 						0 => array(
 							'operator' => 'like',
@@ -123,7 +126,8 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 								'bar'
 							)
 						)
-					)
+					),
+					'string' => 'tt_content.header like gp:tx_choice'
 				)
 			),
 			'logicalOperator' => 'AND',
