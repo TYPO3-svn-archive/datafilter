@@ -53,6 +53,7 @@ class tx_datafilter extends tx_tesseract_filterbase {
 		$this->defineSorting($this->filterData['orderby']);
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['datafilter']['postprocessReturnValue'])) {
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['datafilter']['postprocessReturnValue'] as $className) {
+					/** @var $postProcessor tx_datafilter_postprocessFilter */
 				$postProcessor = &t3lib_div::getUserObj($className);
 				if ($postProcessor instanceof tx_datafilter_postprocessFilter) {
 					$postProcessor->postprocessFilter($this);
@@ -63,6 +64,26 @@ class tx_datafilter extends tx_tesseract_filterbase {
 			// Before returning, save the filter to session
 		$this->saveFilter();
 		return $this->filter;
+	}
+
+	/**
+	 * This method returns true or false depending on whether the filter can be considered empty or not
+	 *
+	 * @return bool
+	 */
+	public function isFilterEmpty() {
+		$isEmpty = parent::isFilterEmpty();
+			// Call hook to extend the empty filter check
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['datafilter']['postprocessEmptyFilterCheck'])) {
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['datafilter']['postprocessEmptyFilterCheck'] as $className) {
+					/** @var $postProcessor tx_datafilter_postprocessEmptyFilterCheck */
+				$postProcessor = &t3lib_div::getUserObj($className);
+				if ($postProcessor instanceof tx_datafilter_postprocessEmptyFilterCheck) {
+					$isEmpty = $postProcessor->postprocessEmptyFilterCheck($isEmpty, $this);
+				}
+			}
+		}
+		return $isEmpty;
 	}
 
 	/**
