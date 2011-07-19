@@ -25,8 +25,10 @@ Limits	7
 Ordering configuration	7
 Session storage	8
 Filter cache	8
-Known problems	9
-To-Do list	10
+Developers manual	9
+Hooks	9
+Known problems	10
+To-Do list	11
 
 Introduction
 What does it do?
@@ -217,6 +219,13 @@ There's also a possibility to clear the cache more selectively, for a single val
 tt_news_cat.uid = vars:showUid // \clear_cache
 
 In this example, if there's no showUid to be found in the vars, the value returned by the parser will be “\clear_cache”. The Data Filter will act upon this and remove that value from the session cache.
+Developers manual
+Hooks
+This extension provides two hooks that can be used by developers:
+postprocessReturnValue: this hook comes at the end of the filter's evaluation. It receives a reference to the tx_datafilter object. This makes it possible to access (using getFilter()) and modify (using setFilter()) the current values of the filter.
+Any class meaning to use this hook must implement the tx_datafilter_postprocessFilter interface.
+postprocessEmptyFilterCheck: this hook comes at the end of the empty filter check. It can be used to modify the result of the isFilterEmpty() method. It receives as parameters the current value of the empty filter check (a boolean) and a reference to the calling tx_datafilter object. It is expected to return a boolean value (true if the filter can be considered to be empty, false otherwise).
+Any class meaning to use this hook must implement the tx_datafilter_postprocessEmptyFilterCheck interface.
 
 Known problems
 If you have any issues, please refer to the Tesseract Project web site (http://www.typo3-tesseract.com/). You may also post your problems to the TYPO3 English mailing list (typo3.english), so that others may benefit from the answers too. For bugs or feature requests, please open an entry in the extension's bug tracker on Forge (http://forge.typo3.org/projects/extension-datafilter/issues).
