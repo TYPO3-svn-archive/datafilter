@@ -1,3 +1,7 @@
+2011-08-24 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Corrected case error in autoloader file, resolves #29210
+
 2011-08-16 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Released to TER as version 1.2.0
