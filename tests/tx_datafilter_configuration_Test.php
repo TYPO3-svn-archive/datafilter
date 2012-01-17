@@ -44,7 +44,7 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 	public function filterSimple() {
 			// Define the filter to parse
 		$filterDefinition = array(
-			'configuration' => 'tt_content.uid = 42',
+			'configuration' => 'tt_content.uid   = 42',
 			'logical_operator' => 'AND'
 		);
 		/**
@@ -67,7 +67,7 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 							'value' => '42'
 						)
 					),
-					'string' => 'tt_content.uid = 42'
+					'string' => 'tt_content.uid   = 42'
 				)
 			),
 			'logicalOperator' => 'AND',
