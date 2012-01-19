@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 Francois Suter <typo3@cobweb.ch>
+*  (c) 2010-2012 Francois Suter <typo3@cobweb.ch>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -58,7 +58,8 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 							'conditions' => array(
 								0 => array(
 									'operator' => '=',
-									'value' => '42'
+									'value' => '42',
+									'negate' => FALSE
 								)
 							),
 							'string' => 'tt_content.uid   = 42'
@@ -77,7 +78,8 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 								0 => array(
 									'condition' => '= 42',
 									'operator' => '=',
-									'value' => '42'
+									'value' => '42',
+									'negate' => FALSE
 								)
 							)
 						)
@@ -102,7 +104,8 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 									'value' => array(
 										'foo',
 										'bar'
-									)
+									),
+									'negate' => FALSE
 								)
 							),
 							'string' => 'tt_content.header like gp:tx_choice'
@@ -121,7 +124,8 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 								0 => array(
 									'condition' => 'like foo,bar',
 									'operator' => 'like',
-									'value' => 'foo,bar'
+									'value' => 'foo,bar',
+									'negate' => FALSE
 								)
 							)
 						)

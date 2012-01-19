@@ -3,7 +3,7 @@ EXT: Data Filter
 Extension Key: datafilter
 Language: en
 Keywords: forEditors, forIntermediates
-Copyright 2008-2011, Francois Suter (Cobweb), <typo3@cobweb.ch>
+Copyright 2008-2012, Francois Suter (Cobweb), <typo3@cobweb.ch>
 
 This document is published under the Open Content License
 available from http://www.opencontent.org/opl.shtml
@@ -86,7 +86,7 @@ Strictly smaller than
 >
 Strictly bigger than
 !=
-Not equals
+Not equals (since version 1.3.0 the ! sign is actually used to negate all operators)
 in
 In a group of values (think of the SQL IN operator)
 andgroup, orgroup
@@ -98,8 +98,11 @@ Should be similar to the SQL LIKE operator, but testing the start of a word. Thi
 end
 Should be similar to the SQL LIKE operator, but testing the end of a word. This means the Data Provider is expected to prepend a wildcard to the value.
 
-Expressions are managed by the “expressions” extension. Any expression described in that extension's manual can be used here.
+Since version 1.3.0 all operators can be negated by prepending them with an exclamation mark (!). Example:
+tt_content.title !like foo
 
+
+Expressions are managed by the “expressions” extension. Any expression described in that extension's manual can be used here.
 On top of that some special values can be used in Data Filter. Special values all start with a backslash (\).
 Key:
 Explanations:

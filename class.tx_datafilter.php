@@ -175,6 +175,14 @@ class tx_datafilter extends tx_tesseract_filterbase {
 			}
 				// The second match is the operator
 			$operator = strtolower(array_shift($matches));
+				// If the operator starts with a !, it's a negation
+				// Set the negation flag and strip the !
+			if (strpos($operator, '!') === 0) {
+				$negate = TRUE;
+				$operator = substr($operator, 1);
+			} else {
+				$negate = FALSE;
+			}
 				// All the other matches are put together again to form the expression to be evaluated
 			$valueExpression = implode(' ', $matches);
 			try {
@@ -187,20 +195,25 @@ class tx_datafilter extends tx_tesseract_filterbase {
 						// If the value is an array, just use it straightaway
 					if (is_array($value)) {
 						$filterConfiguration = array(
-													'table' => $table,
-													'field' => $field,
-													'main' => $mainFlag,
-													'void' => $voidFlag,
-													'conditions' => array(0 => array('operator' => $operator, 'value' => $value)),
-													'string' => $line
-												);
+							'table' => $table,
+							'field' => $field,
+							'main' => $mainFlag,
+							'void' => $voidFlag,
+							'conditions' => array(
+								0 => array(
+									'operator' => $operator,
+									'value' => $value,
+									'negate' => $negate
+								)
+							),
+							'string' => $line
+						);
 						$this->filter['filters'][$index] = $filterConfiguration;
-						$this->saveParsedFilter($index, $table, $field, $operator, $value);
+						$this->saveParsedFilter($index, $table, $field, $operator, $value, $negate);
 
 						// The value is not an array and is not an empty string either
 					} elseif ($value !== '') {
-						$conditions = array();
-						$this->saveParsedFilter($index, $table, $field, $operator, $value);
+						$this->saveParsedFilter($index, $table, $field, $operator, $value, $negate);
 							// If value is an interval, this requires more processing
 							// The 2 boundaries of the interval must be extracted and the simple operator replaced by 2 conditions
 						$matches = array();
@@ -219,7 +232,11 @@ class tx_datafilter extends tx_tesseract_filterbase {
 								} else {
 									$operator = '>=';
 								}
-								$conditions[] = array('operator' => $operator, 'value' => $lowerBoundary);
+								$conditions[] = array(
+									'operator' => $operator,
+									'value' => $lowerBoundary,
+									'negate' => FALSE
+								);
 							}
 								// Handle upper boundary, only if it's not * (= +infinity)
 							if ($upperBoundary != '*') {
@@ -228,7 +245,19 @@ class tx_datafilter extends tx_tesseract_filterbase {
 								} else {
 									$operator = '<=';
 								}
-								$conditions[] = array('operator' => $operator, 'value' => $upperBoundary);
+								$conditions[] = array(
+									'operator' => $operator,
+									'value' => $upperBoundary,
+									'negate' => FALSE
+								);
+							}
+								// If the condition contained a negation, issue warning that this cannot be used in a filter
+							if ($negate) {
+								$this->controller->addMessage('datfilter',
+									'Negation ignored in condition: ' . $theLine,
+									'Intervals cannot be negated',
+									t3lib_FlashMessage::NOTICE
+								);
 							}
 
 							// Normal filter, with no peculiarity, just set it
@@ -249,7 +278,13 @@ class tx_datafilter extends tx_tesseract_filterbase {
 										break;
 								}
 							}
-							$conditions = array(0 => array('operator' => $operator, 'value' => $value));
+							$conditions = array(
+								0 => array(
+									'operator' => $operator,
+									'value' => $value,
+									'negate' => $negate
+								)
+							);
 						}
 						$filterConfiguration = array(
 							'table' => $table,
@@ -372,14 +407,15 @@ class tx_datafilter extends tx_tesseract_filterbase {
 	 * This syntax makes it possible to easily retrieve filter configurations when using the "session:" key in the
 	 * expression parser
 	 *
-	 * @param	mixed	$index: number or string used as a key for the given configuration
-	 * @param	string	$table: name of the table the filter applies to
-	 * @param	string	$field: name of the field the filter applies to
-	 * @param	string	$operator: the operator of the condition
-	 * @param	string	$value: the value of the condition
-	 * @return	void
+	 * @param mixed	$index Number or string used as a key for the given configuration
+	 * @param string $table Name of the table the filter applies to
+	 * @param string $field Name of the field the filter applies to
+	 * @param string $operator The operator of the condition
+	 * @param string $value The value of the condition
+	 * @param bool $negate TRUE if the operator is negated, FALSE otherwise
+	 * @return void
 	 */
-	protected function saveParsedFilter($index, $table, $field, $operator, $value) {
+	protected function saveParsedFilter($index, $table, $field, $operator, $value, $negate) {
 			// Assemble storage key
 		$keyForStorage = (empty($table)) ? '' : $table . '.';
 		$keyForStorage .= $field;
@@ -396,8 +432,13 @@ class tx_datafilter extends tx_tesseract_filterbase {
 		if (is_array($value)) {
 			$value = implode(',', $value);
 		}
-		$condition = $operator . ' ' . $value;
-		$this->filter['parsed']['filters'][$keyForStorage][$index] = array('condition' => $condition, 'operator' => $operator, 'value' => $value);
+		$condition = (($negate) ? '!' : '') . $operator . ' ' . $value;
+		$this->filter['parsed']['filters'][$keyForStorage][$index] = array(
+			'condition' => $condition,
+			'operator' => $operator,
+			'value' => $value,
+			'negate' => $negate
+		);
 	}
 
 	/**
