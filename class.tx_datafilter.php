@@ -448,7 +448,15 @@ class tx_datafilter extends tx_tesseract_filterbase {
 	 * @return	void
 	 */
 	public function reset() {
-		$this->filter = array('filters' => array(), 'logicalOperator' => 'AND', 'limit' => array(), 'orderby' => array(), 'parsed' => array('filters' => array()));
+		$this->filter = array(
+			'filters' => array(),
+			'logicalOperator' => 'AND',
+			'limit' => array(),
+			'orderby' => array(),
+			'parsed' => array(
+				'filters' => array()
+			)
+		);
 	}
 }
 
