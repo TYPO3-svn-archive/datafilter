@@ -1,6 +1,7 @@
 2012-01-19 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Added support for negation of any conditions, resolves #33321
+	* Added more unit tests, resolves #10066
 
 2011-08-24 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 

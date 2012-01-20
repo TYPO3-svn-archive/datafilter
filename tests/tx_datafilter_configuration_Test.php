@@ -43,9 +43,9 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 	 */
 	public function configurationProvider() {
 		$configurations = array(
-			'equality' => array(
+			'equality on main (with alternative values, multiline inc. comments, filter key)' => array(
 				'definition' => array(
-					'configuration' => 'tt_content.uid   = 42',
+					'configuration' => "main.tt_content.uid   = gp:unknown // 42\n#tt_content.uid > 10\nhead :: tt_content.header start foo",
 					'logical_operator' => 'AND'
 				),
 				'result' => array(
@@ -53,7 +53,7 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 						0 => array(
 							'table' => 'tt_content',
 							'field' => 'uid',
-							'main' => FALSE,
+							'main' => TRUE,
 							'void' => FALSE,
 							'conditions' => array(
 								0 => array(
@@ -62,7 +62,21 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 									'negate' => FALSE
 								)
 							),
-							'string' => 'tt_content.uid   = 42'
+							'string' => 'main.tt_content.uid   = gp:unknown // 42'
+						),
+						'head' => array(
+							'table' => 'tt_content',
+							'field' => 'header',
+							'main' => FALSE,
+							'void' => FALSE,
+							'conditions' => array(
+								0 => array(
+									'operator' => 'start',
+									'value' => 'foo',
+									'negate' => FALSE
+								)
+							),
+							'string' => 'head :: tt_content.header start foo'
 						)
 					),
 					'logicalOperator' => 'AND',
@@ -80,6 +94,105 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 									'operator' => '=',
 									'value' => '42',
 									'negate' => FALSE
+								)
+							),
+							'tt_content.header' => array(
+								'head' => array(
+									'condition' => 'start foo',
+									'operator' => 'start',
+									'value' => 'foo',
+									'negate' => FALSE
+								)
+							)
+						)
+					)
+				),
+			),
+			'in interval' => array(
+				'definition' => array(
+					'configuration' => 'tt_content.uid = [100,200]',
+					'logical_operator' => 'AND'
+				),
+				'result' => array(
+					'filters' => array(
+						0 => array(
+							'table' => 'tt_content',
+							'field' => 'uid',
+							'main' => FALSE,
+							'void' => FALSE,
+							'conditions' => array(
+								0 => array(
+									'operator' => '>=',
+									'value' => '100',
+									'negate' => FALSE
+								),
+								1 => array(
+									'operator' => '<=',
+									'value' => '200',
+									'negate' => FALSE
+								)
+							),
+							'string' => 'tt_content.uid = [100,200]'
+						)
+					),
+					'logicalOperator' => 'AND',
+					'limit' => array(
+						'max' => 0,
+						'offset' => 0,
+						'pointer' => 0
+					),
+					'orderby' => array(),
+					'parsed' => array(
+						'filters' => array(
+							'tt_content.uid' => array(
+								0 => array(
+									'condition' => '= [100,200]',
+									'operator' => '=',
+									'value' => '[100,200]',
+									'negate' => FALSE
+								)
+							)
+						)
+					)
+				),
+			),
+			'not null' => array(
+				'definition' => array(
+					'configuration' => 'tt_content.image != \NULL',
+					'logical_operator' => 'AND'
+				),
+				'result' => array(
+					'filters' => array(
+						0 => array(
+							'table' => 'tt_content',
+							'field' => 'image',
+							'main' => FALSE,
+							'void' => FALSE,
+							'conditions' => array(
+								0 => array(
+									'operator' => '=',
+									'value' => '\null',
+									'negate' => TRUE
+								)
+							),
+							'string' => 'tt_content.image != \NULL'
+						)
+					),
+					'logicalOperator' => 'AND',
+					'limit' => array(
+						'max' => 0,
+						'offset' => 0,
+						'pointer' => 0
+					),
+					'orderby' => array(),
+					'parsed' => array(
+						'filters' => array(
+							'tt_content.image' => array(
+								0 => array(
+									'condition' => '!= \NULL',
+									'operator' => '=',
+									'value' => '\NULL',
+									'negate' => TRUE
 								)
 							)
 						)
@@ -132,6 +245,78 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 					)
 				)
 			),
+			'date with void and OR' => array(
+				'definition' => array(
+					'configuration' => 'void.tt_content.tstamp > strtotime:2010-01-01',
+					'logical_operator' => 'OR'
+				),
+				'result' => array(
+					'filters' => array(
+						0 => array(
+							'table' => 'tt_content',
+							'field' => 'tstamp',
+							'main' => FALSE,
+							'void' => TRUE,
+							'conditions' => array(
+								0 => array(
+									'operator' => '>',
+									'value' => '1262300400',
+									'negate' => FALSE
+								)
+							),
+							'string' => 'void.tt_content.tstamp > strtotime:2010-01-01'
+						)
+					),
+					'logicalOperator' => 'OR',
+					'limit' => array(
+						'max' => 0,
+						'offset' => 0,
+						'pointer' => 0
+					),
+					'orderby' => array(),
+					'parsed' => array(
+						'filters' => array(
+							'tt_content.tstamp' => array(
+								0 => array(
+									'condition' => '> 1262300400',
+									'operator' => '>',
+									'value' => '1262300400',
+									'negate' => FALSE
+								)
+							)
+						)
+					)
+				),
+			),
+			'limits and order' => array(
+				'definition' => array(
+					'configuration' => '',
+					'logical_operator' => 'AND',
+					'orderby' => "field = tt_content.tstamp\norder = desc",
+					'limit_start' => 'gp:page // 0',
+					'limit_offset' => 'gp:max // 20',
+					'limit_pointer' => ''
+				),
+				'result' => array(
+					'filters' => array(),
+					'logicalOperator' => 'AND',
+					'limit' => array(
+						'max' => 0,
+						'offset' => 20,
+						'pointer' => 0
+					),
+					'orderby' => array(
+						1 => array(
+							'table' => 'tt_content',
+							'field' => 'tstamp',
+							'order' => 'desc'
+						)
+					),
+					'parsed' => array(
+						'filters' => array()
+					)
+				),
+			)
 		);
 		return $configurations;
 	}
