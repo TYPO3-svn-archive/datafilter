@@ -369,33 +369,48 @@ class tx_datafilter extends tx_tesseract_filterbase {
 		$items = array();
 			// In a first pass, we store all the configuration items as we go along,
 			// storing their type and value
+		$hasRandomOrdering = FALSE;
 		foreach ($configurationItems as $line) {
-			$matches = t3lib_div::trimExplode('=', $line, 1);
-			$items[] = array('type' => $matches[0], 'value' => $matches[1]);
+				// If the special \rand keyword (for random ordering) is used on any line, mark it as such
+				// and interrupt the process
+			if (strpos($line, '\rand') !== FALSE) {
+				$hasRandomOrdering = TRUE;
+				break;
+			} else {
+				$matches = t3lib_div::trimExplode('=', $line, 1);
+				$items[] = array('type' => $matches[0], 'value' => $matches[1]);
+			}
 		}
-		$numItems = count($items);
-		for ($i = 0; $i < $numItems; $i++) {
-				// Consider the item only if it's a field
-				// (if it's an order, it will just skip to the next item)
-			if ($items[$i]['type'] == 'field') {
-				$fullField = tx_expressions_parser::evaluateString($items[$i]['value']);
-				$table = '';
-				$field = $fullField;
-				if (strpos($fullField, '.') !== false) {
-					list($table, $field) = t3lib_div::trimExplode('.', $fullField);
-				}
-				$order = 'ASC'; // Default sorting
-					// Check if the next item is an order
-					// If yes, take it and increase counter by 1 for stepping to the item after
-				if (isset($items[$i + 1])) {
-					if ($items[$i + 1]['type'] == 'order') {
-						$order = tx_expressions_parser::evaluateString($items[$i + 1]['value']);
-						$i++;
-					} else {
-						$order = 'ASC'; // Default sorting
+			// If the ordering structure contains at least one random ordering statement,
+			// consider only this, as any other ordering wouldn't make any sense
+		if ($hasRandomOrdering) {
+				// Note: since it is the only ordering configuration, it always has index = 1
+			$this->filter['orderby'][1] = array('table' => '', 'field' => '', 'order' => 'RAND');
+		} else {
+			$numItems = count($items);
+			for ($i = 0; $i < $numItems; $i++) {
+					// Consider the item only if it's a field
+					// (if it's an order, it will just skip to the next item)
+				if ($items[$i]['type'] == 'field') {
+					$fullField = tx_expressions_parser::evaluateString($items[$i]['value']);
+					$table = '';
+					$field = $fullField;
+					if (strpos($fullField, '.') !== FALSE) {
+						list($table, $field) = t3lib_div::trimExplode('.', $fullField);
 					}
+					$order = 'ASC'; // Default sorting
+						// Check if the next item is an order
+						// If yes, take it and increase counter by 1 for stepping to the item after
+					if (isset($items[$i + 1])) {
+						if ($items[$i + 1]['type'] == 'order') {
+							$order = tx_expressions_parser::evaluateString($items[$i + 1]['value']);
+							$i++;
+						} else {
+							$order = 'ASC'; // Default sorting
+						}
+					}
+					$this->filter['orderby'][$i] = array('table' => $table, 'field' => $field, 'order' => $order);
 				}
-				$this->filter['orderby'][$i] = array('table' => $table, 'field' => $field, 'order' => $order);
 			}
 		}
 	}

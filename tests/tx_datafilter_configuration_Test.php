@@ -316,6 +316,58 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 						'filters' => array()
 					)
 				),
+			),
+			'random ordering (clean definition)' => array(
+				'definition' => array(
+					'configuration' => '',
+					'logical_operator' => 'AND',
+					'orderby' => '\rand',
+				),
+				'result' => array(
+					'filters' => array(),
+					'logicalOperator' => 'AND',
+					'limit' => array(
+						'max' => 0,
+						'offset' => 0,
+						'pointer' => 0
+					),
+					'orderby' => array(
+						1 => array(
+							'table' => '',
+							'field' => '',
+							'order' => 'RAND'
+						)
+					),
+					'parsed' => array(
+						'filters' => array()
+					)
+				),
+			),
+			'random ordering (not clean definition)' => array(
+				'definition' => array(
+					'configuration' => '',
+					'logical_operator' => 'AND',
+					'orderby' => 'field = \rand',
+				),
+				'result' => array(
+					'filters' => array(),
+					'logicalOperator' => 'AND',
+					'limit' => array(
+						'max' => 0,
+						'offset' => 0,
+						'pointer' => 0
+					),
+					'orderby' => array(
+						1 => array(
+							'table' => '',
+							'field' => '',
+							'order' => 'RAND'
+						)
+					),
+					'parsed' => array(
+						'filters' => array()
+					)
+				),
 			)
 		);
 		return $configurations;

@@ -23,12 +23,12 @@ Input screen	4
 Filter Configuration	4
 Limits	7
 Ordering configuration	7
-Session storage	8
-Filter cache	8
-Developers manual	9
-Hooks	9
-Known problems	10
-To-Do list	11
+Session storage	9
+Filter cache	9
+Developers manual	10
+Hooks	10
+Known problems	11
+To-Do list	12
 
 Introduction
 What does it do?
@@ -186,6 +186,16 @@ field = tx_specialsearch_pi1|sort // items.name
 order = tx_specialsearch_pi1|order
 
 In this case the name of the field to use for ordering will be fetched from variable  tx_specialsearch_pi1[sort]. If not defined, the default search will use the “name” field from the “items” table. The sorting order will be fetched from variable tx_specialsearch_pi1[order]. The order may be omitted and the Data Provider is expected to use some default sorting order.
+
+Random ordering
+For random ordering, the simple keyword "\rand" can be used. There's no need to define any "field" or "order" (as per the above configuration). Just a single line with the keyword:
+\rand
+
+Any appearance of the "\rand" keyword will trigger random ordering. Thus the following lines have the same effect:
+field = \rand
+order = \rand
+
+Note that all other ordering configurations will be ignore if the keyword "\rand" is found on any line.
 
 Session storage
 A filter can be stored into the session with the purpose of being accessed by another filter. To force a filter to be stored into the session, one must simply give it a session key (in the “Session” tab of the input screen).
