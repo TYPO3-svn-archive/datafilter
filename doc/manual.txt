@@ -17,18 +17,19 @@ Introduction	3
 What does it do?	3
 Screenshots	3
 Questions?	3
-Keeping the developer happy	3
-Users manual	4
-Input screen	4
-Filter Configuration	4
-Limits	7
-Ordering configuration	7
-Session storage	9
-Filter cache	9
-Developers manual	10
-Hooks	10
-Known problems	11
-To-Do list	12
+Compatibility	3
+Keeping the developer happy	4
+Users manual	5
+Input screen	5
+Filter Configuration	5
+Limits	8
+Ordering configuration	8
+Session storage	10
+Filter cache	10
+Developers manual	11
+Hooks	11
+Known problems	12
+To-Do list	13
 
 Introduction
 What does it do?
@@ -38,6 +39,9 @@ Screenshots
 This shows the typical input screen of a Data Filter (note the “SQL” tab is added by extension “dataquery”):
 Questions?
 If you have any questions about this extension, you may want to refer to the Tesseract Project web site (http://www.typo3-tesseract.com/) for support and tutorials. You may also ask questions in the TYPO3 English mailing list (typo3.english).
+Compatibility
+As of version 1.5.0, TYPO3 4.5 or higher is required.
+
 Keeping the developer happy
 If you like this extension, do not hesitate to rate it. Go the Extension Repository, search for this extension, click on its title to go to the details view, then click on the “Ratings” tab and vote (you need to be logged in). Every new vote keeps the developer ticking. So just do it!
 You may also take a step back and reflect about the beauty of sharing. Think about how much you are benefiting and how much yourself is giving back to the community.

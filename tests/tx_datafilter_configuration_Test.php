@@ -376,8 +376,8 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 	/**
 	 * Test the parsing various filters
 	 *
-	 * @param string The raw filter definition
-	 * @param array The expected structure of the parsed filter
+	 * @param string $definition The raw filter definition
+	 * @param array $result The expected structure of the parsed filter
 	 * @test
 	 * @dataProvider configurationProvider
 	 */
