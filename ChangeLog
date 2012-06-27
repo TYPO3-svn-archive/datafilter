@@ -1,3 +1,7 @@
+2012-06-27 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Added definition of search fields, resolves #38439
+
 2012-06-22 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Verified compatibility with TYPO3 4.7, raised requirement to TYPO3 4.5, resolves #38289

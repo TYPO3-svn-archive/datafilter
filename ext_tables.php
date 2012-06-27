@@ -7,16 +7,17 @@ t3lib_extMgm::allowTableOnStandardPages('tx_datafilter_filters');
 
 $TCA['tx_datafilter_filters'] = array (
 	'ctrl' => array (
-		'title'     => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters',		
-		'label'     => 'title',	
+		'title'     => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters',
+		'label'     => 'title',
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'default_sortby' => 'ORDER BY title',	
-		'delete' => 'deleted',	
-		'enablecolumns' => array (		
+		'default_sortby' => 'ORDER BY title',
+		'delete' => 'deleted',
+		'enablecolumns' => array (
 			'disabled' => 'hidden',
 		),
+		'searchFields' => 'title,configuration,orderby',
 		'dividers2tabs' => TRUE,
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'tca.php',
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'res/icons/icon_tx_datafilter_filters.gif',
