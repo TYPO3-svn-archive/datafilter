@@ -292,7 +292,7 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 				'definition' => array(
 					'configuration' => '',
 					'logical_operator' => 'AND',
-					'orderby' => "field = tt_content.tstamp\norder = desc",
+					'orderby' => "field = tt_content.tstamp\norder = desc\nfield = tt_content.starttime\norder=ASC\nengine=source",
 					'limit_start' => 'gp:page // 0',
 					'limit_offset' => 'gp:max // 20',
 					'limit_pointer' => ''
@@ -309,7 +309,54 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 						1 => array(
 							'table' => 'tt_content',
 							'field' => 'tstamp',
-							'order' => 'desc'
+							'order' => 'desc',
+							'engine' => ''
+						),
+						4 => array(
+							'table' => 'tt_content',
+							'field' => 'starttime',
+							'order' => 'ASC',
+							'engine' => 'source'
+						)
+					),
+					'parsed' => array(
+						'filters' => array()
+					)
+				),
+			),
+				// Ordering configuration with errors:
+				// - second ordering for first field overrides first ordering
+				// - engine configuration for first field comes too late (because of the duplicate ordering configuration)
+				// - engine value for the second field are invalid
+			'ordering (bad configuration)' => array(
+				'definition' => array(
+					'configuration' => '',
+					'logical_operator' => 'AND',
+					'orderby' => "field = tt_content.tstamp\norder = desc\norder = asc\nengine = source\nfield = tt_content.starttime\norder=foo\nengine = bar",
+					'limit_start' => '',
+					'limit_offset' => '',
+					'limit_pointer' => ''
+				),
+				'result' => array(
+					'filters' => array(),
+					'logicalOperator' => 'AND',
+					'limit' => array(
+						'max' => 0,
+						'offset' => 0,
+						'pointer' => 0
+					),
+					'orderby' => array(
+						2 => array(
+							'table' => 'tt_content',
+							'field' => 'tstamp',
+							'order' => 'asc',
+							'engine' => ''
+						),
+						6 => array(
+							'table' => 'tt_content',
+							'field' => 'starttime',
+							'order' => 'foo',
+							'engine' => ''
 						)
 					),
 					'parsed' => array(
@@ -335,7 +382,8 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 						1 => array(
 							'table' => '',
 							'field' => '',
-							'order' => 'RAND'
+							'order' => 'RAND',
+							'engine' => ''
 						)
 					),
 					'parsed' => array(
@@ -343,7 +391,7 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 					)
 				),
 			),
-			'random ordering (not clean definition)' => array(
+			'random ordering (not clean, but still valid definition)' => array(
 				'definition' => array(
 					'configuration' => '',
 					'logical_operator' => 'AND',
@@ -361,7 +409,8 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 						1 => array(
 							'table' => '',
 							'field' => '',
-							'order' => 'RAND'
+							'order' => 'RAND',
+							'engine' => ''
 						)
 					),
 					'parsed' => array(

@@ -385,12 +385,17 @@ class tx_datafilter extends tx_tesseract_filterbase {
 			// consider only this, as any other ordering wouldn't make any sense
 		if ($hasRandomOrdering) {
 				// Note: since it is the only ordering configuration, it always has index = 1
-			$this->filter['orderby'][1] = array('table' => '', 'field' => '', 'order' => 'RAND');
+			$this->filter['orderby'][1] = array(
+				'table' => '',
+				'field' => '',
+				'order' => 'RAND',
+				'engine' => ''
+			);
 		} else {
 			$numItems = count($items);
 			for ($i = 0; $i < $numItems; $i++) {
 					// Consider the item only if it's a field
-					// (if it's an order, it will just skip to the next item)
+					// (if it's an order or an engine, it will just skip to the next item)
 				if ($items[$i]['type'] == 'field') {
 					$fullField = tx_expressions_parser::evaluateString($items[$i]['value']);
 					$table = '';
@@ -398,18 +403,33 @@ class tx_datafilter extends tx_tesseract_filterbase {
 					if (strpos($fullField, '.') !== FALSE) {
 						list($table, $field) = t3lib_div::trimExplode('.', $fullField);
 					}
-					$order = 'ASC'; // Default sorting
-						// Check if the next item is an order
+						// Default sorting
+					$order = 'ASC';
+						// Default sorting engine (none)
+					$engine = '';
+						// Look up to two lines ahead to see if the next item is an order or an engine
 						// If yes, take it and increase counter by 1 for stepping to the item after
-					if (isset($items[$i + 1])) {
-						if ($items[$i + 1]['type'] == 'order') {
-							$order = tx_expressions_parser::evaluateString($items[$i + 1]['value']);
-							$i++;
-						} else {
-							$order = 'ASC'; // Default sorting
+					for ($j = 1; $j <= 2; $j++) {
+						if (isset($items[$i + 1])) {
+							if ($items[$i + 1]['type'] == 'order') {
+								$order = tx_expressions_parser::evaluateString($items[$i + 1]['value']);
+								$i++;
+							} elseif ($items[$i + 1]['type'] == 'engine') {
+								$engine = strtolower(tx_expressions_parser::evaluateString($items[$i + 1]['value']));
+									// Ensure valid value
+								if (!in_array($engine, self::$allowedOrderingEngines)) {
+									$engine = '';
+								}
+								$i++;
+							}
 						}
 					}
-					$this->filter['orderby'][$i] = array('table' => $table, 'field' => $field, 'order' => $order);
+					$this->filter['orderby'][$i] = array(
+						'table' => $table,
+						'field' => $field,
+						'order' => $order,
+						'engine' => $engine
+					);
 				}
 			}
 		}
