@@ -433,10 +433,11 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 	 * @dataProvider configurationProvider
 	 */
 	public function testFilters($definition, $result) {
-		/**
-		 * @var tx_datafilter	$filterObject
-		 */
+		/** @var tx_datafilter	$filterObject */
 		$filterObject = t3lib_div::makeInstance('tx_datafilter');
+		/** @var $controller tx_tesseract_picontrollerbase */
+		$controller = $this->getMock('tx_tesseract_picontrollerbase');
+		$filterObject->setController($controller);
 		$filterObject->setData($definition);
 		$actualResult = $filterObject->getFilterStructure();
 			// Check if the "structure" part if correct
