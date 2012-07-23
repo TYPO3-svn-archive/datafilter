@@ -159,17 +159,31 @@ class tx_datafilter extends tx_tesseract_filterbase {
 					// If there are more than one parts left, we expect the first part
 					// to be a special keyword and the second part to be a table's name
 				} else {
-						// NOTE: if the part does not match a keyword, it is ignored
-						// TODO: log a warning about invalid syntax
+						// NOTE: if the part does not match a keyword, it is ignored, but an error is logged
 					$part = array_shift($fullFieldParts);
 					if ($part == 'main') {
 						$mainFlag = TRUE;
 					} elseif ($part == 'void') {
 						$voidFlag = TRUE;
+					} else {
+						$this->controller->addMessage(
+							'datafilter',
+							'Invalid keyword "' . htmlspecialchars($part) . '" ignored on line: ' . htmlspecialchars($line),
+							'Wrong filter configuration',
+							t3lib_FlashMessage::WARNING
+						);
 					}
 						// Get the "last" part (if it's not the last, there's a syntax error)
-						// TODO: we could throw an exception in this case
 					$table = array_shift($fullFieldParts);
+						// Report error if last part is not really the last
+					if (count($fullFieldParts) > 0) {
+						$this->controller->addMessage(
+							'datafilter',
+							'Extra keyword(s) "' . htmlspecialchars(implode(', ', $fullFieldParts)) . '" ignored on line: ' . htmlspecialchars($line),
+							'Wrong filter configuration',
+							t3lib_FlashMessage::WARNING
+						);
+					}
 				}
 //				list($table, $field) = t3lib_div::trimExplode('.', $fullField);
 			}
