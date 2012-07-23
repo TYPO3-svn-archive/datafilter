@@ -391,46 +391,74 @@ class tx_datafilter extends tx_tesseract_filterbase {
 				'order' => 'RAND',
 				'engine' => ''
 			);
+
+			// Otherwise parse the ordering statements line by line, expecting first a "field" directive
+			// and then either "order" or "engine", or another "field" which indicates the start of a new
+			// ordering configuration. Lines coming out of step are ignored.
 		} else {
 			$numItems = count($items);
-			for ($i = 0; $i < $numItems; $i++) {
-					// Consider the item only if it's a field
-					// (if it's an order or an engine, it will just skip to the next item)
-				if ($items[$i]['type'] == 'field') {
-					$fullField = tx_expressions_parser::evaluateString($items[$i]['value']);
+			$lineCounter = 0;
+			$newConfiguration = FALSE;
+			$configurations = array();
+			$currentConfiguration = 0;
+			$parseErrors = array();
+
+			do {
+
+					// If we don't have a configuration yet, the only acceptable type is "field"
+				if (count($configurations) == 0 && $items[$lineCounter]['type'] != 'field') {
+					$parseErrors[] = 'Expected "field" property on line: ' . htmlspecialchars(implode(' ', $items[$lineCounter]));
+
+					// If we have a "field" entry, it's a new configuration, set it up with default values
+				} elseif (!$newConfiguration && $items[$lineCounter]['type'] == 'field') {
+					$newConfiguration = TRUE;
+					$fullField = tx_expressions_parser::evaluateString($items[$lineCounter]['value']);
 					$table = '';
 					$field = $fullField;
 					if (strpos($fullField, '.') !== FALSE) {
 						list($table, $field) = t3lib_div::trimExplode('.', $fullField);
 					}
-						// Default sorting
-					$order = 'ASC';
-						// Default sorting engine (none)
-					$engine = '';
-						// Look up to two lines ahead to see if the next item is an order or an engine
-						// If yes, take it and increase counter by 1 for stepping to the item after
-					for ($j = 1; $j <= 2; $j++) {
-						if (isset($items[$i + 1])) {
-							if ($items[$i + 1]['type'] == 'order') {
-								$order = tx_expressions_parser::evaluateString($items[$i + 1]['value']);
-								$i++;
-							} elseif ($items[$i + 1]['type'] == 'engine') {
-								$engine = strtolower(tx_expressions_parser::evaluateString($items[$i + 1]['value']));
-									// Ensure valid value
-								if (!in_array($engine, self::$allowedOrderingEngines)) {
-									$engine = '';
-								}
-								$i++;
-							}
-						}
-					}
-					$this->filter['orderby'][$i] = array(
+					$currentConfiguration = $lineCounter;
+					$configurations[$currentConfiguration] = array(
 						'table' => $table,
 						'field' => $field,
-						'order' => $order,
-						'engine' => $engine
+						'order' => 'ASC',
+						'engine' => ''
 					);
+
+					// Currently handling a configuration, add information if appropriate types are provided
+				} else {
+					$newConfiguration = FALSE;
+					switch ($items[$lineCounter]['type']) {
+						case 'order':
+							$order = tx_expressions_parser::evaluateString($items[$lineCounter]['value']);
+							$configurations[$currentConfiguration]['order'] = $order;
+							break;
+						case 'engine':
+							$engine = strtolower(tx_expressions_parser::evaluateString($items[$lineCounter]['value']));
+								// Ensure valid value
+							if (!in_array($engine, self::$allowedOrderingEngines)) {
+								$engine = '';
+							}
+							$configurations[$currentConfiguration]['engine'] = $engine;
+							break;
+						default:
+							$parseErrors[] = 'Invalid ordering configuration on line: ' . htmlspecialchars(implode(' = ', $items[$lineCounter]));
+					}
 				}
+				$lineCounter++;
+
+			} while ($lineCounter < $numItems);
+				// Set the found configurations
+			$this->filter['orderby'] = $configurations;
+				// Report parse errors, if any
+			if (count($parseErrors) > 0) {
+				$this->controller->addMessage(
+					'datafilter',
+					'<ul><li>' . implode('</li><li>', $parseErrors) . '</li></ul>',
+					'Invalid configuration items for ordering',
+					t3lib_FlashMessage::WARNING
+				);
 			}
 		}
 	}

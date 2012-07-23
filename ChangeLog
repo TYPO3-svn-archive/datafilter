@@ -1,6 +1,7 @@
 2012-07-23 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Added parsing of engine property for ordering configuration, resolves #39192
+	* Improved parsing of ordering configuration, resolves #39198
 
 2012-07-10 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 

@@ -306,13 +306,13 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 						'pointer' => 0
 					),
 					'orderby' => array(
-						1 => array(
+						0 => array(
 							'table' => 'tt_content',
 							'field' => 'tstamp',
 							'order' => 'desc',
 							'engine' => ''
 						),
-						4 => array(
+						2 => array(
 							'table' => 'tt_content',
 							'field' => 'starttime',
 							'order' => 'ASC',
@@ -324,15 +324,17 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 					)
 				),
 			),
-				// Ordering configuration with errors:
+				// Ordering configuration with errors or some weirdness:
+				// - first line is skipped because we don't have a "field" yet
+				// - empty line after field is removed entirely
+				// - so is line with comment
 				// - second ordering for first field overrides first ordering
-				// - engine configuration for first field comes too late (because of the duplicate ordering configuration)
-				// - engine value for the second field are invalid
-			'ordering (bad configuration)' => array(
+				// - engine value for the second field is invalid
+			'ordering (unusual or bad configuration)' => array(
 				'definition' => array(
 					'configuration' => '',
 					'logical_operator' => 'AND',
-					'orderby' => "field = tt_content.tstamp\norder = desc\norder = asc\nengine = source\nfield = tt_content.starttime\norder=foo\nengine = bar",
+					'orderby' => "order = foo\nfield = tt_content.tstamp\n\n# Comment\norder = desc\norder = asc\nengine = source\nfield = tt_content.starttime\norder=foo\nengine = bar",
 					'limit_start' => '',
 					'limit_offset' => '',
 					'limit_pointer' => ''
@@ -346,13 +348,13 @@ class tx_datafilter_configuration_Test extends tx_phpunit_testcase {
 						'pointer' => 0
 					),
 					'orderby' => array(
-						2 => array(
+						1 => array(
 							'table' => 'tt_content',
 							'field' => 'tstamp',
 							'order' => 'asc',
-							'engine' => ''
+							'engine' => 'source'
 						),
-						6 => array(
+						5 => array(
 							'table' => 'tt_content',
 							'field' => 'starttime',
 							'order' => 'foo',
