@@ -29,7 +29,7 @@
  * @package		TYPO3
  * @subpackage	tx_datafilter
  *
- * $Id: class.tx_datafilter.php 265 2009-12-28 11:26:19Z fsuter $
+ * $Id$
  */
 class tx_datafilter extends tx_tesseract_filterbase {
 
