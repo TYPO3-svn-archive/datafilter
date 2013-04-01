@@ -2,14 +2,14 @@
 // $Id$ //
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
-$TCA['tx_datafilter_filters'] = array (
-	'ctrl' => $TCA['tx_datafilter_filters']['ctrl'],
+$GLOBALS['TCA']['tx_datafilter_filters'] = array (
+	'ctrl' => $GLOBALS['TCA']['tx_datafilter_filters']['ctrl'],
 	'interface' => array (
 		'showRecordFieldList' => 'hidden,title,configuration,additional_sql'
 	),
-	'feInterface' => $TCA['tx_datafilter_filters']['feInterface'],
+	'feInterface' => $GLOBALS['TCA']['tx_datafilter_filters']['feInterface'],
 	'columns' => array (
-		'hidden' => array (		
+		'hidden' => array (
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
 			'config'  => array (
@@ -17,27 +17,27 @@ $TCA['tx_datafilter_filters'] = array (
 				'default' => '0'
 			)
 		),
-		'title' => array (		
-			'exclude' => 0,		
-			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.title',		
+		'title' => array (
+			'exclude' => 0,
+			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.title',
 			'config' => array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'required,trim',
 			)
 		),
-		'configuration' => array (		
-			'exclude' => 0,		
-			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.configuration',		
+		'configuration' => array (
+			'exclude' => 0,
+			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.configuration',
 			'config' => array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '6',
 			)
 		),
-		'logical_operator' => array (		
-			'exclude' => 1,		
-			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.logical_operator',		
+		'logical_operator' => array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.logical_operator',
 			'config' => array (
 				'type' => 'radio',
 				'default' => 'AND',
@@ -47,21 +47,21 @@ $TCA['tx_datafilter_filters'] = array (
 				),
 			)
 		),
-		'orderby' => array (		
-			'exclude' => 0,		
-			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.orderby',		
+		'orderby' => array (
+			'exclude' => 0,
+			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.orderby',
 			'config' => array (
 				'type' => 'text',
-				'cols' => '30',	
+				'cols' => '30',
 				'rows' => '3',
 			)
 		),
-		'limit_start' => array (		
-			'exclude' => 0,		
-			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.limit_start',		
+		'limit_start' => array (
+			'exclude' => 0,
+			'label' => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters.limit_start',
 			'config' => array (
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'trim',
 			)
 		),

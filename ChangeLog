@@ -1,3 +1,7 @@
+2013-04-01 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Verified compatibility with TYPO3 CMS 6.0, resolves #46843
+
 2012-07-30 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Released to TER as version 1.6.0

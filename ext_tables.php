@@ -5,7 +5,7 @@ if (!defined ('TYPO3_MODE')) {
 
 t3lib_extMgm::allowTableOnStandardPages('tx_datafilter_filters');
 
-$TCA['tx_datafilter_filters'] = array (
+$GLOBALS['TCA']['tx_datafilter_filters'] = array (
 	'ctrl' => array (
 		'title'     => 'LLL:EXT:datafilter/locallang_db.xml:tx_datafilter_filters',
 		'label'     => 'title',
@@ -30,8 +30,8 @@ t3lib_extMgm::addLLrefForTCAdescr('tx_datafilter_filters', t3lib_extMgm::extPath
 // Register datafilter as a Data Filter
 
 t3lib_div::loadTCA('tt_content');
-$TCA['tt_content']['columns']['tx_displaycontroller_datafilter']['config']['allowed'] .= ',tx_datafilter_filters';
-$TCA['tt_content']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'] .= ',tx_datafilter_filters';
+$GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_datafilter']['config']['allowed'] .= ',tx_datafilter_filters';
+$GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'] .= ',tx_datafilter_filters';
 
 // Add a wizard for adding a datafilter
 
@@ -46,6 +46,6 @@ $addDatafilteryWizard = array(
 								'setValue' => 'append'
 							)
 						);
-$TCA['tt_content']['columns']['tx_displaycontroller_datafilter']['config']['wizards']['add_datafilter'] = $addDatafilteryWizard;
-$TCA['tt_content']['columns']['tx_displaycontroller_datafilter2']['config']['wizards']['add_datafilter2'] = $addDatafilteryWizard;
+$GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_datafilter']['config']['wizards']['add_datafilter'] = $addDatafilteryWizard;
+$GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_datafilter2']['config']['wizards']['add_datafilter2'] = $addDatafilteryWizard;
 ?>
